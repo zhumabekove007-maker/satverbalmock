@@ -1,0 +1,983 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>SAT Verbal · Mock Test</title>
+<style>
+  :root {
+    --navy: #0C2340;
+    --accent: #7A3FE0;
+    --accent2: #0B5FFF;
+    --gold: #C9A227;
+    --bg: #F6F7F9;
+    --card-bg: #ffffff;
+    --ink: #1B2430;
+    --muted: #5A6577;
+    --line: #DCE1E9;
+    --head: #0C2340;
+    --good: #0E9F6E;
+    --bad: #C0392B;
+    --sel-bg: rgba(122,63,224,0.10);
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --bg: #0B1220; --card-bg: #16203A; --ink: #E7ECF5; --muted: #9AA7C0; --line: #2A3654; --head: #ffffff;
+      --sel-bg: rgba(122,63,224,0.25);
+    }
+  }
+  :root[data-theme="dark"] {
+    --bg: #0B1220; --card-bg: #16203A; --ink: #E7ECF5; --muted: #9AA7C0; --line: #2A3654; --head: #ffffff;
+    --sel-bg: rgba(122,63,224,0.25);
+  }
+  * { box-sizing: border-box; }
+  [hidden] { display: none !important; }
+  html, body { margin: 0; }
+  body {
+    background: var(--bg); color: var(--ink);
+    font-family: 'Helvetica Neue', Arial, sans-serif;
+    min-height: 100vh; display: flex; flex-direction: column;
+    padding-top: env(safe-area-inset-top, 0px);
+  }
+  h1, h2, h3 { font-family: Georgia, serif; font-weight: 400; color: var(--head); margin: 0; }
+  button { font-family: inherit; cursor: pointer; }
+  .btn {
+    border: none; border-radius: 12px; padding: 13px 22px; font-size: 14.5px; font-weight: 700;
+    background: var(--navy); color: #fff; transition: opacity .15s, transform .1s;
+  }
+  .btn:active { transform: scale(0.97); }
+  .btn:disabled { opacity: .35; cursor: default; }
+  .btn.ghost { background: var(--card-bg); color: var(--head); border: 1px solid var(--line); }
+  .btn.danger { background: var(--bad); }
+  .btn.big { padding: 16px 30px; font-size: 16px; }
+
+  /* ---------- generic centered screens ---------- */
+  .center { width: 100%; max-width: 760px; margin: 0 auto; padding: 28px 16px 64px; }
+  .kicker {
+    display: inline-block; font-size: 11px; letter-spacing: 2px; text-transform: uppercase; color: var(--muted);
+    border: 1px solid var(--line); border-radius: 20px; padding: 4px 12px; margin-bottom: 12px;
+  }
+  .card { background: var(--card-bg); border: 1px solid var(--line); border-radius: 16px; padding: 20px 22px; margin-bottom: 14px; }
+  .card h3 { font-size: 17px; margin-bottom: 10px; }
+  .card p, .card li { font-size: 14.5px; line-height: 1.6; color: var(--ink); }
+  .card ul { margin: 6px 0 0; padding-left: 20px; }
+  .muted { color: var(--muted); }
+  table.struct { width: 100%; border-collapse: collapse; font-size: 14px; }
+  table.struct th, table.struct td { text-align: left; padding: 8px 6px; border-bottom: 1px solid var(--line); }
+  table.struct th { font-size: 11.5px; letter-spacing: 1px; text-transform: uppercase; color: var(--muted); }
+  .radios { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 8px; }
+  .radios label {
+    flex: 1; min-width: 200px; border: 1px solid var(--line); border-radius: 12px; padding: 12px 14px; cursor: pointer;
+    font-size: 14px; background: var(--card-bg);
+  }
+  .radios input { margin-right: 8px; }
+  .back-link { font-size: 13px; color: var(--accent2); text-decoration: none; display: inline-block; margin-bottom: 16px; }
+
+  /* ---------- test screen ---------- */
+  #screen-test { flex: 1; display: flex; flex-direction: column; min-height: 100vh; }
+  .tbar {
+    display: grid; grid-template-columns: 1fr auto 1fr; align-items: center; gap: 10px;
+    padding: 10px 18px; background: var(--card-bg); border-bottom: 1px solid var(--line);
+    position: sticky; top: 0; z-index: 5;
+  }
+  .tbar .tl { font-size: 13px; font-weight: 800; color: var(--head); }
+  .tbar .tl small { display: block; font-weight: 400; color: var(--muted); font-size: 11.5px; }
+  .timer-box { text-align: center; }
+  .timer { font-variant-numeric: tabular-nums; font-weight: 800; font-size: 20px; color: var(--head); }
+  .timer.low { color: var(--bad); }
+  .timer-toggle { background: none; border: none; font-size: 11.5px; color: var(--muted); text-decoration: underline; padding: 0; }
+  .tbar .tr { text-align: right; }
+  .qwrap { flex: 1; display: grid; grid-template-columns: 1fr 1fr; }
+  .pane { padding: 26px 30px 120px; overflow-y: auto; }
+  .pane.passage { border-right: 1px solid var(--line); }
+  @media (max-width: 860px) {
+    .qwrap { grid-template-columns: 1fr; }
+    .pane.passage { border-right: none; border-bottom: 1px solid var(--line); padding-bottom: 20px; }
+    .pane { padding: 20px 16px 20px; }
+    .tbar { padding: 8px 12px; }
+    .qwrap { padding-bottom: 90px; }
+  }
+  .ptext { font-family: Georgia, serif; font-size: 17px; line-height: 1.7; }
+  .ptext p { margin: 0 0 12px; }
+  .ptext u { text-decoration: underline; text-decoration-thickness: 1.5px; text-underline-offset: 3px; }
+  .notes { font-family: Georgia, serif; font-size: 16.5px; line-height: 1.6; margin: 10px 0 0; padding-left: 22px; }
+  .notes li { margin-bottom: 6px; }
+  table.data { border-collapse: collapse; margin: 14px 0 4px; width: 100%; max-width: 440px; font-size: 14.5px; }
+  table.data caption { text-align: left; font-weight: 800; padding-bottom: 6px; font-size: 14px; color: var(--head); }
+  table.data th, table.data td { border: 1px solid var(--line); padding: 8px 10px; text-align: left; }
+  table.data th { background: var(--bg); }
+  .qhead { display: flex; align-items: center; justify-content: space-between; gap: 10px; margin-bottom: 14px;
+    background: var(--bg); border: 1px solid var(--line); border-radius: 10px; padding: 8px 12px; }
+  .qnum { background: var(--navy); color: #fff; font-weight: 800; font-size: 14px; border-radius: 6px; padding: 4px 11px; }
+  .flagbtn { background: none; border: none; font-size: 13px; font-weight: 700; color: var(--muted); padding: 4px 6px; }
+  .flagbtn.on { color: var(--bad); }
+  .qtext { font-size: 16px; line-height: 1.55; margin: 0 0 16px; font-weight: 600; }
+  .opt { display: flex; align-items: stretch; gap: 8px; margin-bottom: 10px; }
+  .optmain {
+    flex: 1; display: flex; align-items: center; gap: 12px; text-align: left; border: 1.5px solid var(--line);
+    border-radius: 12px; background: var(--card-bg); color: var(--ink); padding: 13px 14px; font-size: 15px; line-height: 1.45;
+  }
+  .optmain .letter {
+    flex: none; width: 28px; height: 28px; border-radius: 50%; border: 1.5px solid var(--muted);
+    display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: 13px; color: var(--muted);
+  }
+  .opt.sel .optmain { border-color: var(--accent); background: var(--sel-bg); }
+  .opt.sel .letter { background: var(--accent); border-color: var(--accent); color: #fff; }
+  .opt.elim .otext { text-decoration: line-through; }
+  .opt.elim .optmain { opacity: .45; }
+  .strike {
+    flex: none; width: 34px; border: 1px solid var(--line); border-radius: 10px; background: var(--card-bg);
+    color: var(--muted); font-size: 11px; font-weight: 800; text-decoration: line-through;
+  }
+  .opt.elim .strike { background: var(--navy); color: #fff; }
+  .fbar {
+    position: fixed; left: 0; right: 0; bottom: 0; background: var(--card-bg); border-top: 1px solid var(--line);
+    display: grid; grid-template-columns: 1fr auto 1fr; align-items: center; gap: 10px;
+    padding: 10px 18px calc(10px + env(safe-area-inset-bottom, 0px)); z-index: 6;
+  }
+  .fbar .fl { font-size: 12.5px; color: var(--muted); }
+  .navbtn { background: var(--navy); color: #fff; border: none; border-radius: 20px; padding: 10px 18px; font-weight: 800; font-size: 13.5px; }
+  .fbar .fr { display: flex; gap: 8px; justify-content: flex-end; }
+  @media (max-width: 560px) { .fbar .fl { display: none; } .fbar { grid-template-columns: auto 1fr; } .fbar .fr { grid-column: 2; } .navbtn { grid-column: 1; } }
+  .pop {
+    position: fixed; left: 50%; transform: translateX(-50%); bottom: 72px; width: min(540px, calc(100vw - 24px));
+    background: var(--card-bg); border: 1px solid var(--line); border-radius: 16px; padding: 18px;
+    box-shadow: 0 14px 40px rgba(12,35,64,.25); z-index: 8;
+  }
+  .pop h3 { font-size: 16px; margin-bottom: 4px; }
+  .grid { display: grid; grid-template-columns: repeat(9, 1fr); gap: 8px; margin: 14px 0; }
+  @media (max-width: 480px) { .grid { grid-template-columns: repeat(6, 1fr); } }
+  .gq {
+    position: relative; aspect-ratio: 1; border-radius: 8px; border: 1.5px dashed var(--muted); background: var(--card-bg);
+    color: var(--accent2); font-weight: 800; font-size: 14px;
+  }
+  .gq.ans { border-style: solid; border-color: var(--accent2); background: var(--accent2); color: #fff; }
+  .gq.cur { outline: 3px solid var(--gold); outline-offset: 1px; }
+  .gq.flag::after { content: '⚑'; position: absolute; top: -7px; right: -4px; font-size: 14px; color: var(--bad); }
+  .legend { display: flex; gap: 14px; flex-wrap: wrap; font-size: 12px; color: var(--muted); }
+  .toast {
+    position: fixed; top: 70px; left: 50%; transform: translateX(-50%); background: var(--navy); color: #fff;
+    padding: 10px 18px; border-radius: 20px; font-size: 13.5px; z-index: 20; box-shadow: 0 8px 24px rgba(0,0,0,.25);
+  }
+
+  /* ---------- results ---------- */
+  .scorebox { text-align: center; padding: 10px 0 18px; }
+  .score-big { font-family: Georgia, serif; font-size: 78px; color: var(--head); line-height: 1; }
+  .score-range { font-size: 14px; color: var(--muted); margin-top: 6px; }
+  .pill { display: inline-block; font-size: 12px; font-weight: 800; border-radius: 20px; padding: 4px 12px; margin-top: 12px; background: var(--sel-bg); color: var(--accent); }
+  .stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 14px; }
+  .stat { background: var(--card-bg); border: 1px solid var(--line); border-radius: 14px; padding: 14px; text-align: center; }
+  .stat b { display: block; font-family: Georgia, serif; font-size: 26px; color: var(--head); font-weight: 400; }
+  .stat span { font-size: 12px; color: var(--muted); }
+  .drow { margin: 12px 0; }
+  .drow .dl { display: flex; justify-content: space-between; font-size: 13.5px; margin-bottom: 5px; }
+  .bar { height: 8px; background: var(--line); border-radius: 8px; overflow: hidden; }
+  .bar > i { display: block; height: 100%; background: var(--accent); border-radius: 8px; }
+  .chips { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 10px; }
+  .chip { background: var(--sel-bg); color: var(--accent); font-weight: 700; font-size: 13px; padding: 5px 12px; border-radius: 20px; }
+  .filters { display: flex; gap: 8px; flex-wrap: wrap; margin: 10px 0 14px; }
+  .filters button { border: 1px solid var(--line); background: var(--card-bg); color: var(--head); border-radius: 20px; padding: 7px 14px; font-size: 13px; font-weight: 700; }
+  .filters button.on { background: var(--navy); color: #fff; border-color: var(--navy); }
+  details.rv { background: var(--card-bg); border: 1px solid var(--line); border-radius: 14px; margin-bottom: 10px; }
+  details.rv summary { cursor: pointer; padding: 13px 16px; font-size: 13.5px; font-weight: 700; list-style: none; display: flex; gap: 10px; align-items: center; }
+  details.rv summary::-webkit-details-marker { display: none; }
+  .mark { flex: none; width: 24px; height: 24px; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: #fff; font-size: 13px; }
+  .mark.ok { background: var(--good); } .mark.no { background: var(--bad); } .mark.skip { background: var(--muted); }
+  .rvbody { padding: 0 16px 16px; }
+  .rvbody .ptext { font-size: 15.5px; margin-bottom: 10px; }
+  .ro { border: 1.5px solid var(--line); border-radius: 10px; padding: 9px 12px; margin-bottom: 7px; font-size: 14px; display: flex; gap: 10px; }
+  .ro.correct { border-color: var(--good); background: rgba(14,159,110,.12); }
+  .ro.wrong { border-color: var(--bad); background: rgba(192,57,43,.12); }
+  .ro b { flex: none; }
+  .expl { margin-top: 10px; font-size: 14px; line-height: 1.6; border-left: 3px solid var(--gold); padding-left: 12px; }
+  .tagline { font-size: 11.5px; color: var(--muted); margin-bottom: 8px; }
+</style>
+</head>
+<body>
+
+<!-- ============ INTRO ============ -->
+<div id="screen-intro" class="center">
+  <a class="back-link" href="index.html">← Словарный тренажёр</a><br>
+  <span class="kicker">SAT Verbal · Reading &amp; Writing</span>
+  <h1 style="font-size:30px; margin-bottom:6px;">Полный mock-тест</h1>
+  <p class="muted" style="margin:0 0 20px; font-size:14.5px;">Адаптивный тест в формате Digital SAT: 2 модуля по 27 вопросов. Сложность второго модуля зависит от результата первого.</p>
+
+  <div class="card">
+    <h3>Формат</h3>
+    <table class="struct">
+      <tr><th>Модуль</th><th>Вопросов</th><th>Время</th></tr>
+      <tr><td>Модуль 1 (смешанная сложность)</td><td>27</td><td id="t1">30 мин</td></tr>
+      <tr><td>Модуль 2 (легче или сложнее — по итогам Модуля 1)</td><td>27</td><td id="t2">30 мин</td></tr>
+    </table>
+    <p class="muted" style="margin-top:12px;">В каждом модуле вопросы идут в том же порядке, что и на реальном экзамене: <b>Craft &amp; Structure</b> (8) → <b>Information &amp; Ideas</b> (7) → <b>Standard English Conventions</b> (7) → <b>Expression of Ideas</b> (5). Каждый вопрос — короткий текст и 4 варианта ответа.</p>
+  </div>
+
+  <div class="card">
+    <h3>Длительность модуля</h3>
+    <div class="radios">
+      <label><input type="radio" name="mins" value="30" checked> <b>30 минут</b> — ровно 1 час на весь тест</label>
+      <label><input type="radio" name="mins" value="32"> <b>32 минуты</b> — как на реальном SAT (64 мин)</label>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3>Как проходить</h3>
+    <ul>
+      <li>Сядь так, чтобы час тебя никто не отвлекал. Без словарей и подсказок — иначе оценка не будет честной.</li>
+      <li><b>⚑ Отметить</b> — пометить вопрос, чтобы вернуться к нему; <b>S̶</b> рядом с вариантом — вычеркнуть вариант.</li>
+      <li>Кнопка внизу с номером вопроса открывает карту модуля. После отправки модуля вернуться к нему нельзя.</li>
+      <li>Когда время выходит, модуль отправляется автоматически. Неотвеченные вопросы считаются ошибками — угадывай.</li>
+    </ul>
+  </div>
+
+  <div class="card">
+    <h3>Про оценку</h3>
+    <p class="muted" style="margin:0;">Реальная шкала College Board строится на закрытой статистической модели. Здесь оценка (200–800) — <b>приблизительная</b>: она учитывает число верных ответов и то, в какой модуль 2 ты попал. Используй её как ориентир, а не как прогноз с точностью до 10 баллов. Слова из твоего тренажёра встречаются в тексте вопросов; в конце тест покажет, какие из них стоит повторить.</p>
+  </div>
+
+  <div style="text-align:center; margin-top:22px;"><button class="btn big" id="btn-start">Начать Модуль 1</button></div>
+</div>
+
+<!-- ============ TEST ============ -->
+<div id="screen-test" hidden>
+  <div class="tbar">
+    <div class="tl"><span id="mod-label">Reading and Writing · Module 1</span><small>SAT Mock Test</small></div>
+    <div class="timer-box">
+      <div class="timer" id="timer">30:00</div>
+      <button class="timer-toggle" id="timer-toggle">Скрыть</button>
+    </div>
+    <div class="tr"><button class="btn ghost" id="btn-to-review" style="padding:8px 14px; font-size:13px;">Проверка</button></div>
+  </div>
+  <div class="qwrap">
+    <section class="pane passage" id="pane-passage"></section>
+    <section class="pane" id="pane-q"></section>
+  </div>
+  <div class="fbar">
+    <div class="fl">SAT Reading &amp; Writing</div>
+    <button class="navbtn" id="btn-nav">Вопрос 1 из 27 ▴</button>
+    <div class="fr">
+      <button class="btn ghost" id="btn-back">Назад</button>
+      <button class="btn" id="btn-next">Далее</button>
+    </div>
+  </div>
+  <div class="pop" id="nav-pop" hidden>
+    <h3 id="pop-title">Модуль 1</h3>
+    <div class="legend"><span>▢ без ответа</span><span>■ с ответом</span><span style="color:var(--bad)">⚑ отмечен</span></div>
+    <div class="grid" id="pop-grid"></div>
+    <div style="display:flex; gap:8px; justify-content:space-between;">
+      <button class="btn ghost" id="pop-close">Закрыть</button>
+      <button class="btn" id="pop-review">К экрану проверки</button>
+    </div>
+  </div>
+</div>
+
+<!-- ============ REVIEW ============ -->
+<div id="screen-review" class="center" hidden>
+  <span class="kicker" id="rev-kicker">Модуль 1</span>
+  <h2 style="font-size:26px; margin-bottom:6px;">Проверь свои ответы</h2>
+  <p class="muted" style="font-size:14px; margin:0 0 6px;" id="rev-sub"></p>
+  <div class="card" style="margin-top:14px;">
+    <div class="legend"><span>▢ без ответа</span><span>■ с ответом</span><span style="color:var(--bad)">⚑ отмечен</span></div>
+    <div class="grid" id="rev-grid"></div>
+    <p class="muted" style="font-size:13px; margin:0;" id="rev-counts"></p>
+  </div>
+  <div id="confirm-box" class="card" hidden style="border-color:var(--bad);">
+    <p style="margin:0 0 12px;" id="confirm-text"></p>
+    <div style="display:flex; gap:10px;">
+      <button class="btn danger" id="confirm-yes">Да, отправить</button>
+      <button class="btn ghost" id="confirm-no">Отмена</button>
+    </div>
+  </div>
+  <div style="display:flex; gap:10px; justify-content:center; margin-top:18px; flex-wrap:wrap;">
+    <button class="btn ghost" id="rev-back">← Вернуться к вопросам</button>
+    <button class="btn" id="rev-submit">Отправить модуль</button>
+  </div>
+</div>
+
+<!-- ============ BREAK ============ -->
+<div id="screen-break" class="center" hidden>
+  <div style="text-align:center; padding-top:40px;">
+    <span class="kicker">Модуль 1 завершён</span>
+    <h2 style="font-size:28px; margin-bottom:10px;">Готов к Модулю 2?</h2>
+    <p class="muted" id="break-info" style="font-size:14.5px; max-width:480px; margin:0 auto 8px;"></p>
+    <p class="muted" style="font-size:14px; max-width:480px; margin:0 auto 26px;">Если нужно — сделай глоток воды. Таймер Модуля 2 стартует только после нажатия на кнопку. К Модулю 1 вернуться нельзя.</p>
+    <button class="btn big" id="btn-start2">Начать Модуль 2</button>
+  </div>
+</div>
+
+<!-- ============ RESULTS ============ -->
+<div id="screen-results" class="center" hidden>
+  <span class="kicker">Результат · Reading &amp; Writing</span>
+  <div class="scorebox">
+    <div class="score-big" id="res-score">—</div>
+    <div class="score-range" id="res-range"></div>
+    <div class="pill" id="res-route"></div>
+  </div>
+  <div class="stats">
+    <div class="stat"><b id="res-m1">—</b><span>Модуль 1</span></div>
+    <div class="stat"><b id="res-m2">—</b><span id="res-m2l">Модуль 2</span></div>
+    <div class="stat"><b id="res-total">—</b><span>Всего верных</span></div>
+  </div>
+  <div class="card"><h3>По разделам</h3><div id="res-domains"></div></div>
+  <div class="card" id="res-words-card"><h3>Слова с сайта: что повторить</h3><p class="muted" id="res-words-note" style="margin:0;"></p><div class="chips" id="res-words"></div></div>
+  <div class="card"><p class="muted" style="margin:0; font-size:13px;">Оценка ориентировочная: реальный SAT использует закрытую статистическую модель (IRT), а здесь учитывается только число верных ответов и сложность модуля 2. Разброс ±30 баллов — нормальный. Один mock-тест — это один замер; лучше пройти несколько тестов и смотреть на тренд.</p></div>
+
+  <h2 style="font-size:22px; margin-top:26px;">Разбор вопросов</h2>
+  <div class="filters" id="filters">
+    <button data-f="all" class="on">Все</button>
+    <button data-f="wrong">Ошибки и пропуски</button>
+    <button data-f="flag">Отмеченные</button>
+  </div>
+  <div id="review-list"></div>
+  <div style="display:flex; gap:10px; justify-content:center; margin-top:24px; flex-wrap:wrap;">
+    <button class="btn" onclick="location.reload()">Пройти заново</button>
+    <a class="btn ghost" href="index.html" style="text-decoration:none; display:inline-block;">К словарному тренажёру</a>
+  </div>
+</div>
+
+<div class="toast" id="toast" hidden></div>
+
+<script>
+/* =====================================================================
+   QUESTION DATA
+   d: domain (cs | ii | sec | eoi) · t: question type · p: passage (HTML)
+   q: question · o: 4 options · a: index of correct answer · e: explanation
+   w: words from the vocabulary trainer featured in the item
+   ===================================================================== */
+const DOM = { cs: 'Craft and Structure', ii: 'Information and Ideas', sec: 'Standard English Conventions', eoi: 'Expression of Ideas' };
+const ORDER = ['cs', 'ii', 'sec', 'eoi'];
+const Q_WIC = "Which choice completes the text with the most logical and precise word or phrase?";
+const Q_STD = "Which choice completes the text so that it conforms to the conventions of Standard English?";
+const Q_TR = "Which choice completes the text with the most logical transition?";
+const Q_INF = "Which choice most logically completes the text?";
+const Q_MAIN = "Which choice best states the main idea of the text?";
+const Q_FUNC = "Which choice best describes the function of the underlined sentence in the overall structure of the text?";
+const Q_STRUC = "Which choice best describes the overall structure of the text?";
+const Q_PURP = "Which choice best states the main purpose of the text?";
+const Q_SYN = "Which choice most effectively uses relevant information from the notes to accomplish this goal?";
+const NOTES_INTRO = "While researching a topic, a student has taken the following notes:";
+
+/* ------------------------- MODULE 1 (mixed difficulty) ------------------------- */
+const MODULE1 = [
+ { d:'cs', t:'Words in Context', q:Q_WIC,
+   p:`<p>Although early reviews of the novel were mixed, the author remained ______ about its prospects, confident that readers would eventually come to appreciate its unconventional structure.</p>`,
+   o:["optimistic","indifferent","skeptical","bewildered"], a:0, w:['skeptical','novel'],
+   e:"«Although» (хотя) + «confident» → автор остаётся оптимистичным, несмотря на смешанные отзывы. Skeptical — противоположный смысл, indifferent не сочетается с «confident»." },
+ { d:'cs', t:'Words in Context', q:Q_WIC,
+   p:`<p>Dr. Amara Okafor’s field notes are so ______ that other ecologists can reproduce her survey exactly, down to the placement of each marker and the time of day each measurement was taken.</p>`,
+   o:["casual","brief","meticulous","ambiguous"], a:2, w:['meticulous','ambiguous'],
+   e:"Повторить всё «до размещения каждого маркера» можно только по предельно точным, внимательным к деталям записям — meticulous. Casual и ambiguous мешали бы воспроизводимости." },
+ { d:'cs', t:'Words in Context', q:Q_WIC,
+   p:`<p>A single eyewitness report is rarely enough to settle a historical dispute, so historians typically seek independent documents that ______ the account before treating it as reliable.</p>`,
+   o:["challenge","corroborate","abbreviate","sanction"], a:1, w:['corroborate','challenge','sanction'],
+   e:"Независимые документы нужны, чтобы подтвердить рассказ свидетеля — corroborate (корень ROBOR — «укреплять»). Challenge означало бы «оспаривать»." },
+ { d:'cs', t:'Words in Context', q:Q_WIC,
+   p:`<p>Although the first three prototypes of the solar-powered boat failed in rough water, the engineering team ______, revising the hull design and testing again each spring until the vessel finally stayed afloat in heavy waves.</p>`,
+   o:["relented","boasted","hesitated","persisted"], a:3, w:['persist','boast'],
+   e:"Несмотря на неудачи, команда продолжала пересматривать конструкцию и пробовать снова — persisted. Relented и hesitated означают «уступить / колебаться»." },
+ { d:'cs', t:'Text Structure and Purpose', q:Q_PURP,
+   p:`<p>In the 1950s, the botanist Barbara McClintock’s claim that genes can change position on a chromosome was met with skepticism from many of her peers. Decades later, as molecular techniques made it possible to study these “jumping genes” directly, her work was vindicated, and in 1983 she received the Nobel Prize in Physiology or Medicine.</p>`,
+   o:["To explain the technology used to sequence genomes","To argue that Nobel Prizes are awarded too slowly","To describe how a scientist’s once-doubted idea came to be accepted","To compare McClintock’s methods with those of her peers"], a:2, w:['skeptical','receive'],
+   e:"Текст прослеживает путь идеи: сначала скепсис коллег, затем подтверждение и признание. Остальные варианты уводят в сторону от главной линии." },
+ { d:'cs', t:'Text Structure and Purpose', q:Q_FUNC,
+   p:`<p>Urban planners often assume that adding bike lanes slows traffic. <u>A recent study of twelve mid-sized cities, however, found no measurable increase in average commute times after bike lanes were installed.</u> Some researchers suggest that the result may reflect commuters shifting from cars to bicycles, which frees road space for the cars that remain.</p>`,
+   o:["It provides evidence that complicates a common assumption.","It offers a definition of a technical term.","It introduces a historical example that the author later rejects.","It summarizes a proposal made by urban planners."], a:0, w:[],
+   e:"Слово «however» сигнализирует контраст: подчёркнутое предложение даёт данные, которые ставят под сомнение распространённое предположение." },
+ { d:'cs', t:'Cross-Text Connections', q:"Based on the texts, how would the author of Text 2 most likely respond to the claim in Text 1?",
+   p:`<p><b>Text 1</b></p><p>Some economists argue that remote work lowers productivity because spontaneous conversations, which spark new ideas, are far less frequent when employees are scattered across different locations.</p><p><b>Text 2</b></p><p>A recent analysis of one software firm’s records found that teams working remotely completed projects at the same rate as teams working in offices. The authors caution, however, that the firm’s tasks were mostly independent and rarely required collaboration.</p>`,
+   o:["By arguing that remote work raises productivity in every industry","By agreeing that spontaneous conversations are essential to all work","By denying that the firm’s data are reliable","By conceding that the claim might still hold for jobs involving more collaboration than those the firm studied"], a:3, w:[],
+   e:"Авторы Text 2 сами оговаривают, что задачи фирмы почти не требовали совместной работы, — значит, утверждение Text 1 может быть верным для более коллаборативных профессий. Остальные варианты слишком категоричны или не следуют из текста." },
+ { d:'cs', t:'Text Structure and Purpose', q:Q_STRUC,
+   p:`<p>The octopus’s ability to change color has long fascinated biologists. Specialized skin cells called chromatophores expand or contract under the control of the nervous system, altering the pigment visible on the skin’s surface. Yet octopuses are thought to be colorblind, which raises a puzzle: how do they match backgrounds whose colors they apparently cannot discern? Some researchers propose that light-sensitive proteins in the skin itself may play a role.</p>`,
+   o:["It describes a disagreement between two research teams and declares a winner.","It presents a phenomenon, explains how it works, and then raises an unresolved question with a proposed answer.","It narrates a single experiment in chronological order.","It lists several animals with similar abilities and ranks them."], a:1, w:['surface','discern'],
+   e:"Структура: явление (смена цвета) → механизм (хроматофоры) → загадка (дальтонизм) → предполагаемое объяснение (белки в коже)." },
+
+ { d:'ii', t:'Central Ideas and Details', q:Q_MAIN,
+   p:`<p>The Hohokam people of what is now southern Arizona built hundreds of miles of irrigation canals between roughly 600 and 1450 CE, channeling water from the Salt and Gila Rivers to desert farmland. Archaeologists note that the canals’ gentle gradients, which let water flow without eroding the channel walls, reflect a sophisticated understanding of hydrology.</p>`,
+   o:["The Hohokam abandoned their canals because of erosion.","The Salt and Gila Rivers are the longest in Arizona.","The Hohokam’s canal system reflected substantial engineering knowledge.","Desert farming is no longer practiced in Arizona."], a:2, w:['substantial'],
+   e:"Главная мысль — продуманный уклон каналов говорит о серьёзных инженерных знаниях. Остальные утверждения в тексте не содержатся." },
+ { d:'ii', t:'Inferences', q:Q_INF,
+   p:`<p>The monarch butterflies that fly south to Mexico each autumn have never made the journey before, and they hatch long after the previous year’s migrants have died, so they cannot learn the route from them. Researchers therefore conclude that the butterflies’ ability to navigate to the same distant mountain forests ______</p>`,
+   o:["is likely innate rather than learned.","was taught to them by older butterflies.","depends mainly on local weather forecasts.","has weakened in recent decades."], a:0, w:['innate'],
+   e:"Бабочки не могут ни помнить маршрут, ни научиться у предков → способность, скорее всего, врождённая (innate)." },
+ { d:'ii', t:'Command of Evidence (Textual)', q:"Which finding, if true, would most strongly support Lindgren’s hypothesis?",
+   p:`<p>Ecologist Maya Lindgren hypothesizes that small gardens in dense neighborhoods act as stepping-stone habitats that help bees travel across cities.</p>`,
+   o:["Many city residents report that they enjoy gardening.","Bees are generally more active in warm weather than in cool weather.","Gardens in rural areas typically contain more flowering plants than urban gardens do.","City blocks with several small gardens had more bee species than blocks without gardens, even after accounting for nearby park acreage."], a:3, w:[],
+   e:"Гипотеза: маленькие сады помогают пчёлам жить в городе. Прямее всего её поддерживает сравнение кварталов с садами и без них при контроле площади парков (исключает альтернативное объяснение)." },
+ { d:'ii', t:'Command of Evidence (Quantitative)', q:"Which choice most effectively uses data from the table to support the claim that visits grew substantially at one branch while falling at another?",
+   p:`<p>A researcher is summarizing changes in visits to the branches of the Marlow Public Library between 2019 and 2023.</p>`,
+   table:{ cap:'Visitors by Branch, Marlow Public Library', head:['Branch','2019','2023'], rows:[['Northside','41,200','52,800'],['Riverside','38,500','35,100'],['Central','120,400','131,900'],['Eastgate','22,700','29,300']] },
+   o:["Central had more visitors than any other branch in both 2019 and 2023.","Northside visits rose from 41,200 to 52,800, while Riverside visits fell from 38,500 to 35,100.","Eastgate visits rose from 22,700 to 29,300, while Northside visits rose from 41,200 to 52,800.","Riverside visits fell from 38,500 to 35,100, while Central visits fell from 120,400 to 131,900."], a:1, w:[],
+   e:"Нужны и рост, и падение. В B данные точны: Northside вырос, Riverside упал. В C оба филиала выросли; в D Central назван «упавшим», хотя на самом деле вырос (120 400 → 131 900)." },
+ { d:'ii', t:'Central Ideas and Details', q:Q_MAIN,
+   p:`<p>Marisol had practiced the speech for weeks, and she was so attached to her index cards that she gripped them like a lifeline. But standing at the podium, she felt each rehearsed sentence dissolve. She looked out at her classmates, saw her friend Dani give a subtle nod, and felt an unexpected calm. Setting the cards down, she simply began to talk about the afternoon she first arrived at the school, lost and holding a map that made no sense.</p>`,
+   o:["A nervous speaker sets aside her prepared remarks and speaks from personal experience after seeing a friend’s encouragement.","A student abandons a speech after being embarrassed in front of her classmates.","A new student receives a map from a friend on her first day of school.","A speaker delivers a memorized speech flawlessly and with complete confidence."], a:0, w:['attached','unexpected','subtle'],
+   e:"Марисоль откладывает карточки и рассказывает о личном опыте после кивка подруги. В остальных вариантах искажены факты текста." },
+ { d:'ii', t:'Inferences', q:Q_INF,
+   p:`<p>For decades, conventional wisdom held that Neanderthals lacked the cognitive ability for symbolic expression. But the discovery of pigment-stained shells and engraved stones at Neanderthal sites has made that assumption look less plausible. If the markings were indeed made deliberately, then Neanderthals ______</p>`,
+   o:["were identical to modern humans in every respect.","never used tools.","were likely capable of symbolic thought.","lived earlier than previously assumed."], a:2, w:['conventional wisdom','plausible'],
+   e:"Если отметки сделаны намеренно, это опровергает «conventional wisdom» → неандертальцы, вероятно, были способны к символическому мышлению. «Identical in every respect» — слишком сильное утверждение." },
+ { d:'ii', t:'Command of Evidence (Textual)', q:"Which quotation from the text most effectively illustrates the claim that the narrator briefly feels the neighborhood belongs to her again?",
+   p:`<p>The narrator walks through her childhood neighborhood: “The corner store had become a pharmacy, and the oak that once shaded our stoop was a stump. Cars lined both curbs. Yet when I closed my eyes, I could hear my brother’s bike clattering over the cracked pavement, and for a moment the street was wholly ours again.”</p>`,
+   o:["“The corner store had become a pharmacy”","“Cars lined both curbs.”","“the oak that once shaded our stoop was a stump”","“for a moment the street was wholly ours again”"], a:3, w:[],
+   e:"Утверждение — «на миг улица снова стала нашей». Точно это выражает последняя цитата; остальные описывают, как район изменился." },
+
+ { d:'sec', t:'Boundaries', q:Q_STD,
+   p:`<p>The museum’s newest exhibit features artifacts from the ancient city of Palmyra ______ carved limestone busts and a bronze lamp.</p>`,
+   o:[", among them are","; among them are"," among them are",", which among them are"], a:1, w:[],
+   e:"«among them are…» — самостоятельное предложение, поэтому от первого его нужно отделить точкой с запятой. Запятая даёт comma splice, отсутствие знака — run-on." },
+ { d:'sec', t:'Form, Structure, and Sense', q:Q_STD,
+   p:`<p>The collection of letters, written by soldiers during the Civil War, ______ displayed in the library’s reading room.</p>`,
+   o:["are","were","is","have been"], a:2, w:[],
+   e:"Подлежащее — «collection» (ед. число); «of letters» и вставка между запятыми не влияют на согласование. Глагол: is." },
+ { d:'sec', t:'Form, Structure, and Sense', q:Q_STD,
+   p:`<p>By the time the committee announced its decision, most of the applicants ______ already accepted offers elsewhere.</p>`,
+   o:["had","have","having","will have"], a:0, w:[],
+   e:"Действие (принятие других предложений) произошло раньше другого прошедшего действия — нужен Past Perfect: had already accepted." },
+ { d:'sec', t:'Boundaries', q:Q_STD,
+   p:`<p>Marine biologist Alina Reyes ______ thousands of hours underwater over her career.</p>`,
+   o:[", the director of the Coral Restoration Lab has logged"," the director of the Coral Restoration Lab, has logged"," the director of the Coral Restoration Lab has logged",", the director of the Coral Restoration Lab, has logged"], a:3, w:[],
+   e:"«the director of the Coral Restoration Lab» — необязательное приложение (nonessential appositive). Оно выделяется запятыми с обеих сторон." },
+ { d:'sec', t:'Form, Structure, and Sense', q:Q_STD,
+   p:`<p>Each of the four ______ projects will be displayed in the main hallway this week.</p>`,
+   o:["student’s","students’","students","students’s"], a:1, w:[],
+   e:"Проекты принадлежат четырём ученикам → притяжательная форма множественного числа: students’." },
+ { d:'sec', t:'Form, Structure, and Sense', q:Q_STD,
+   p:`<p>Walking along the shoreline at dawn, ______</p>`,
+   o:["the sea glass caught the explorer’s eye.","a glint of sea glass was noticed by the explorer.","the explorer noticed sea glass glinting in the sand.","the explorer’s attention was drawn to the glinting sea glass."], a:2, w:[],
+   e:"Оборот «Walking along the shoreline…» должен относиться к тому, кто идёт, — the explorer. В остальных вариантах подлежащее — предмет, получается dangling modifier." },
+ { d:'sec', t:'Form, Structure, and Sense', q:Q_STD,
+   p:`<p>The program trains volunteers to read blood-pressure monitors, to record patient histories, and ______ medication schedules to patients.</p>`,
+   o:["to explain","how to explain","explaining","they explain"], a:0, w:[],
+   e:"Параллельная конструкция: to read, to record, to explain." },
+
+ { d:'eoi', t:'Transitions', q:Q_TR,
+   p:`<p>The city’s first electric buses were praised for their quiet operation. ______ their limited range forced the transit authority to recharge them at midday, which disrupted schedules.</p>`,
+   o:["Likewise,","In fact,","For instance,","However,"], a:3, w:[],
+   e:"Первое предложение — достоинство, второе — проблема. Нужен контраст: However." },
+ { d:'eoi', t:'Transitions', q:Q_TR,
+   p:`<p>The team had predicted that the new alloy would resist corrosion. ______ samples left in saltwater for six months showed almost no rust, confirming the prediction.</p>`,
+   o:["Nevertheless,","Indeed,","Otherwise,","By contrast,"], a:1, w:[],
+   e:"Второе предложение подтверждает прогноз из первого → усилительный переход Indeed." },
+ { d:'eoi', t:'Rhetorical Synthesis', q:"The student wants to emphasize the size of the Pantanal. "+Q_SYN,
+   p:`<p>${NOTES_INTRO}</p>`,
+   notes:["The Pantanal is a tropical wetland in South America.","It spans parts of Brazil, Bolivia, and Paraguay.","It covers an estimated 150,000 square kilometers.","It is known for its dense population of jaguars."],
+   o:["The Pantanal, a tropical wetland, is known for its dense population of jaguars.","The Pantanal is a tropical wetland in South America.","Spanning parts of Brazil, Bolivia, and Paraguay, the Pantanal covers an estimated 150,000 square kilometers.","Jaguars live in the Pantanal, a wetland that crosses national borders."], a:2, w:[],
+   e:"Цель — подчеркнуть размер; только вариант C приводит площадь и территорию, которую охватывает болотная система." },
+ { d:'eoi', t:'Rhetorical Synthesis', q:"The student wants to explain how ondol works to an audience unfamiliar with it. "+Q_SYN,
+   p:`<p>${NOTES_INTRO}</p>`,
+   notes:["Hanok are traditional Korean houses.","Many hanok use a heating system called ondol.","Ondol channels hot air from a kitchen fire beneath the floor.","The system warms the home efficiently in winter."],
+   o:["In traditional Korean hanok houses, the ondol system channels hot air from a kitchen fire beneath the floor, warming the home efficiently in winter.","Hanok are traditional Korean houses with a system called ondol.","Traditional Korean houses stay warm in winter.","A kitchen fire is used in hanok houses."], a:0, w:[],
+   e:"Цель — объяснить, как работает ondol. Только вариант A описывает механизм (горячий воздух от кухонного очага под полом) для читателя, не знакомого с темой." },
+ { d:'eoi', t:'Rhetorical Synthesis', q:"The student wants to emphasize a similarity between the two libraries. "+Q_SYN,
+   p:`<p>${NOTES_INTRO}</p>`,
+   notes:["The Sawmill Library opened in 1923.","It was designed in the Beaux-Arts style.","The Harbor Library opened in 1927.","It was also designed in the Beaux-Arts style."],
+   o:["The Sawmill Library opened in 1923, and the Harbor Library opened in 1927.","Unlike the Harbor Library, the Sawmill Library opened in 1923.","The Harbor Library, which opened in 1927, is a Beaux-Arts building.","The Sawmill Library (1923) and the Harbor Library (1927) were both designed in the Beaux-Arts style."], a:3, w:[],
+   e:"Нужно сходство. Вариант D прямо говорит, что оба здания выполнены в одном стиле (both). A и B — про даты и различия." }
+];
+
+/* ------------------------- MODULE 2 · HARDER ------------------------- */
+const MODULE2_HARD = [
+ { d:'cs', t:'Words in Context', q:Q_WIC,
+   p:`<p>The critic’s review of the film was ______ rather than scathing: she noted its flaws with unflinching candor, yet through a dry, ironic humor that left even the director smiling.</p>`,
+   o:["terse","wry","candid","austere"], a:1, w:['wry','terse','candid','candor','austere'],
+   e:"«Dry, ironic humor» = wry (сухо-ироничный). Terse — краткий, candid — откровенный, austere — строгий, лишённый излишеств; ни один не передаёт иронию." },
+ { d:'cs', t:'Words in Context', q:Q_WIC,
+   p:`<p>The treaty’s key clause was deliberately ______: by phrasing the obligation in language each side could read in its own favor, negotiators won signatures from both governments that a precise wording would have scared away.</p>`,
+   o:["candid","exhaustive","emphatic","ambiguous"], a:3, w:['ambiguous','candid'],
+   e:"Формулировку можно было читать «в свою пользу» каждой стороне — значит, она допускала разные толкования: ambiguous. Candid и emphatic — как раз противоположное." },
+ { d:'cs', t:'Words in Context', q:Q_WIC,
+   p:`<p>The senator’s early enthusiasm for the bill was ______ by the budget office’s report, which projected costs far higher than its sponsors had admitted.</p>`,
+   o:["sanctioned","yielded","tempered","compounded"], a:2, w:['temper','sanction','yield','compound'],
+   e:"Отчёт о высоких расходах охладил энтузиазм — tempered (смягчён, умерен). Compounded означало бы «усугублён», sanctioned — «одобрен»." },
+ { d:'cs', t:'Words in Context', q:Q_WIC,
+   p:`<p>Delays at the port were ______ by a shortage of dock workers, so that what began as a minor backlog soon became a crisis.</p>`,
+   o:["compounded","tempered","corroborated","acknowledged"], a:0, w:['compound','temper','corroborate','acknowledge'],
+   e:"Нехватка рабочих усугубила проблему, превратив её в кризис — compounded. Tempered означало бы «смягчена»." },
+ { d:'cs', t:'Text Structure and Purpose', q:Q_FUNC,
+   p:`<p>Economists often describe the gig economy as a source of flexibility for workers. <u>Flexibility, as the sociologist Lena Haas observes, is rarely distributed evenly: those who most need predictable income are often least able to refuse an unprofitable shift.</u> Haas’s point is not that flexible work is inherently exploitative but that its benefits depend on a worker’s bargaining position.</p>`,
+   o:["It restates the economists’ view in more technical terms.","It gives an example of a worker who refused an unprofitable shift.","It rejects the idea that flexible work offers any benefit.","It qualifies a common view by identifying a factor that limits who benefits."], a:3, w:[],
+   e:"Предложение уточняет общепринятый взгляд (гибкость — это хорошо): указывает, что выгода зависит от положения работника. Вариант C слишком радикален — следующее предложение прямо это отрицает." },
+ { d:'cs', t:'Text Structure and Purpose', q:Q_STRUC,
+   p:`<p>Many historians treat the printing press as the decisive cause of the Reformation. Yet pamphlets and woodcuts had circulated for decades without provoking comparable upheaval. What changed, argues historian Elaine Marsh, was not the technology but the audience: a growing literate merchant class eager for religious debate. The press, in this account, amplified a demand that already existed.</p>`,
+   o:["It proposes a theory and then provides three case studies that confirm it.","It presents a widely held explanation, notes a complicating fact, and then offers an alternative account.","It compares two historians’ methods and then endorses one.","It traces the chronological development of the printing press."], a:1, w:['conventional wisdom','challenge'],
+   e:"Структура: общепринятое объяснение → «Yet…» осложняющий факт → альтернативная трактовка (аудитория, а не технология)." },
+ { d:'cs', t:'Cross-Text Connections', q:"Based on the texts, how would Park most likely respond to Calder’s characterization of nostalgia as selective?",
+   p:`<p><b>Text 1</b></p><p>In her essay, philosopher Ines Calder argues that nostalgia is a kind of self-deception: it replaces the messy reality of the past with a flattering, curated version.</p><p><b>Text 2</b></p><p>Psychologist Jun Park argues that nostalgia strengthens a person’s sense of continuity over time. In his view, the selectivity of nostalgic memory is not a defect but the very feature that lets it serve that function.</p>`,
+   o:["By arguing that selectivity is precisely what allows nostalgia to benefit people","By conceding that nostalgia is deceptive but harmless","By proposing that nostalgia is accurate because it preserves every detail of the past","By claiming that nostalgia is unrelated to memory"], a:0, w:[],
+   e:"Park соглашается, что память избирательна, но считает избирательность не пороком, а источником пользы. B и C противоречат тексту; D неверно по смыслу." },
+ { d:'cs', t:'Text Structure and Purpose', q:Q_PURP,
+   p:`<p>Mr. Alvarez, a man of terse greetings and an austere shop, inspected his front window every morning as if it were a patient: a polish here, a straightened price tag there. His daughter, who had long since stopped suggesting he retire, watched from the doorway and said nothing. She understood that the window was not merely glass but the last visible proof that the shop, and therefore he, still mattered to the street.</p>`,
+   o:["To criticize a shopkeeper’s inefficiency","To explain why a shop’s sales have declined","To illustrate how a daily ritual reflects a character’s deeper sense of purpose","To contrast a father’s and a daughter’s attitudes toward retirement"], a:2, w:['terse','austere'],
+   e:"Ежедневный ритуал с витриной показывает, что для героя это вопрос значимости. Дочь не спорит с отцом — она понимает его, так что D не подходит." },
+
+ { d:'ii', t:'Central Ideas and Details', q:Q_MAIN,
+   p:`<p>Conventional wisdom holds that languages spoken by small, isolated communities are structurally simpler than those of large nations. But a survey of forty such languages by linguist Rosa Imani found that many feature grammatical distinctions—such as elaborate verb endings that mark how the speaker learned a piece of information—that are absent from English and Spanish. Imani concludes that the size of a speech community does not predict a language’s grammatical complexity.</p>`,
+   o:["Small languages are disappearing faster than large ones.","Languages with elaborate verb endings are easier for children to learn.","Large nations’ languages are generally more complex than those of small communities.","A survey challenges the assumption that the languages of small communities are structurally simpler."], a:3, w:['conventional wisdom','challenge'],
+   e:"Главная мысль: исследование опровергает расхожее мнение о «простоте» языков малых общин. A и B в тексте не обсуждаются; C противоположно выводу автора." },
+ { d:'ii', t:'Inferences', q:Q_INF,
+   p:`<p>In a laboratory study, bees trained to collect sugar water from blue artificial flowers kept visiting blue flowers even after the researchers began offering the same reward from yellow ones. The researchers interpret this as evidence that bees can form strong preferences through training that persist when conditions change. This interpretation would be undermined if ______</p>`,
+   o:["the researchers recorded the bees’ visits only in the morning hours.","untrained bees given the same choice also visited blue flowers far more often than yellow ones.","the sugar water used as a reward was the same in both kinds of flower.","the study was conducted over several weeks rather than several days."], a:1, w:['persist'],
+   e:"Если необученные пчёлы тоже предпочитают синие цветы, предпочтение не результат тренировки — интерпретация подорвана. Остальные факты не затрагивают причинно-следственную связь." },
+ { d:'ii', t:'Command of Evidence (Textual)', q:"Which finding, if true, would most strongly support Watanabe’s hypothesis?",
+   p:`<p>Researcher Hana Watanabe hypothesizes that urban crows acquire new feeding techniques mainly through social learning rather than individual trial and error.</p>`,
+   o:["Crows that watched a trained crow open a novel food container opened it successfully far sooner than crows that had no opportunity to watch.","Crows exposed to the container without any demonstration eventually opened it on their own.","Urban crows eat a wider variety of foods than rural crows do.","Crows that watched a demonstration opened the container no faster than crows that did not."], a:0, w:['novel'],
+   e:"Социальное обучение подтверждается, если наблюдавшие справились быстрее. B поддерживает trial and error, D опровергает гипотезу, C не по теме." },
+ { d:'ii', t:'Command of Evidence (Quantitative)', q:"Which choice most effectively uses data from the table to complete the statement?",
+   p:`<p>A researcher surveyed adults about their reading habits in 2015 and again in 2023. Although the share of adults who read a print book weekly declined in all three age groups, ______</p>`,
+   table:{ cap:'Adults Who Read a Print Book Weekly (%)', head:['Age group','2015','2023'], rows:[['18–29','72','58'],['30–49','68','62'],['50 and older','61','59']] },
+   o:["the decline was smallest among adults aged 18–29, whose share fell from 72 percent to 58 percent.","adults aged 30–49 had the steepest decline, from 68 percent to 62 percent.","the decline was steepest among adults aged 18–29, whose share fell from 72 percent to 58 percent.","adults aged 50 and older had the highest share in both years."], a:2, w:[],
+   e:"Падение: 18–29 — 14 п.п., 30–49 — 6 п.п., 50+ — 2 п.п. Самое резкое у 18–29, поэтому верен C. В D неверно: у 50+ самая низкая доля." },
+ { d:'ii', t:'Inferences', q:"Which choice best describes Eleni’s reaction to the telegram?",
+   p:`<p>When the telegram arrived, Eleni—reticent even in good times—folded it into thirds and slid it into her apron pocket, then returned to kneading the dough with the same steady rhythm as before. Only when her son asked who had written did she pause, flour dusting her wrists, and answer, in a voice a shade too even, that it was nothing that couldn’t wait until after supper.</p>`,
+   o:["She is eager to share its contents with her son.","She is working to conceal how troubled she is by it.","She is angry that her son interrupted her work.","She is indifferent to its contents."], a:1, w:['reticent'],
+   e:"Подсказки: спрятала телеграмму, «слишком ровный» голос, откладывает разговор — она скрывает тревогу. Безразличие (D) не вяжется с этими деталями." },
+ { d:'ii', t:'Central Ideas and Details', q:Q_MAIN,
+   p:`<p>For decades, ecologists measured a predator’s impact on its prey by counting the animals it killed. But in experiments with songbirds that heard recordings of predator calls—with no actual predators nearby—the birds produced roughly 40 percent fewer offspring than birds that heard no such calls. The fear itself, the researchers conclude, can reshape a prey population.</p>`,
+   o:["Songbirds are the prey species most vulnerable to predators.","Counting kills remains the most reliable way to study predators.","Recordings of predator calls reliably attract predators to nesting sites.","A predator’s presence can reduce prey reproduction even when no prey are killed."], a:3, w:['prey'],
+   e:"Эксперимент показывает: один страх перед хищником снижает размножение жертв. B противоречит смыслу «But…», A и C в тексте не утверждаются." },
+ { d:'ii', t:'Command of Evidence (Textual)', q:"Which quotation from the text most effectively illustrates the claim that Mara feels ambivalent about arriving in the city?",
+   p:`<p>The city’s towers glittered below the train like a promised future. Mara pressed her forehead to the window, longing to be swallowed by those lights, and yet each mile closer made her fingers tighten on the strap of the small bag that held everything she had been willing to leave behind. She wanted to arrive; she wanted, just as badly, to turn around.</p>`,
+   o:["“She wanted to arrive; she wanted, just as badly, to turn around.”","“The city’s towers glittered below the train like a promised future.”","“Mara pressed her forehead to the window, longing to be swallowed by those lights”","“each mile closer made her fingers tighten on the strap of the small bag”"], a:0, w:['ambivalent'],
+   e:"Ambivalent = противоречивые чувства «с двух сторон» (корень AMBI-). Только цитата A содержит оба желания одновременно: приехать и вернуться." },
+
+ { d:'sec', t:'Boundaries', q:Q_STD,
+   p:`<p>The study’s sample was large and carefully ______ its findings nonetheless cannot be generalized to other regions.</p>`,
+   o:["selected,","selected","selected;","selected:"], a:2, w:[],
+   e:"Обе части — самостоятельные предложения, а «nonetheless» не является союзом. Нужна точка с запятой. Запятая — comma splice, двоеточие не вводит пояснение." },
+ { d:'sec', t:'Form, Structure, and Sense', q:Q_STD,
+   p:`<p>Neither the lead researcher nor her three assistants ______ able to explain the anomaly in the data.</p>`,
+   o:["was","is","has been","were"], a:3, w:[],
+   e:"При конструкции neither…nor глагол согласуется с ближайшим подлежащим — «assistants» (мн. число). Прошедшее время: were." },
+ { d:'sec', t:'Form, Structure, and Sense', q:Q_STD,
+   p:`<p>Since the 1990s, the population of the island’s endemic lizard ______ steadily as invasive predators have spread.</p>`,
+   o:["declined","has declined","had declined","will decline"], a:1, w:[],
+   e:"«Since the 1990s» + действие продолжается до настоящего → Present Perfect: has declined." },
+ { d:'sec', t:'Form, Structure, and Sense', q:Q_STD,
+   p:`<p>Among the painter’s most celebrated works ______ a series of seascapes completed during her years in Maine.</p>`,
+   o:["is","are","being","were"], a:0, w:[],
+   e:"Инверсия: подлежащее — «a series» (ед. число), стоящее после глагола. Глагол: is. «Works» — часть предложной группы." },
+ { d:'sec', t:'Form, Structure, and Sense', q:Q_STD,
+   p:`<p>Lucía Fernández was born in Valencia in 1938. A self-taught painter, ______</p>`,
+   o:["Fernández’s first solo exhibition took place in 1962.","critics praised Fernández’s first solo exhibition in 1962.","Fernández held her first solo exhibition in 1962.","in 1962 Fernández’s first solo exhibition was held."], a:2, w:[],
+   e:"«A self-taught painter» должно относиться к самой Fernández — подлежащему главного предложения. В остальных вариантах подлежащее — exhibition или critics (dangling modifier)." },
+ { d:'sec', t:'Form, Structure, and Sense', q:Q_STD,
+   p:`<p>The council’s decision to rezone the waterfront disappointed residents ______ had hoped to preserve the area as parkland.</p>`,
+   o:["whom","which","whose","who"], a:3, w:[],
+   e:"Местоимение — подлежащее придаточного (had hoped) и относится к людям → who." },
+ { d:'sec', t:'Form, Structure, and Sense', q:Q_STD,
+   p:`<p>The committee, along with several outside advisors, ______ expected to present its findings next month.</p>`,
+   o:["are","is","were","have been"], a:1, w:[],
+   e:"«along with several outside advisors» — вставка, она не меняет число. Подлежащее — «committee» (ед. число): is." },
+
+ { d:'eoi', t:'Transitions', q:Q_TR,
+   p:`<p>Octopuses were long assumed to breed once and die soon afterward. ______ one deep-sea species observed off the California coast was found to guard its eggs for more than four years, the longest known brooding period of any animal.</p>`,
+   o:["However,","Therefore,","Similarly,","In other words,"], a:0, w:[],
+   e:"Новое наблюдение противоречит прежнему предположению → контрастный переход However." },
+ { d:'eoi', t:'Transitions', q:Q_TR,
+   p:`<p>The new tax was intended to reduce consumption of sugary drinks. ______ sales fell sharply in the first six months after it took effect.</p>`,
+   o:["In contrast,","Regardless,","Accordingly,","Meanwhile,"], a:2, w:[],
+   e:"Падение продаж — следствие налога, то есть результат его введения: Accordingly (соответственно, как и предполагалось)." },
+ { d:'eoi', t:'Rhetorical Synthesis', q:"The student wants to explain the philosophy behind the visible repairs in kintsugi. "+Q_SYN,
+   p:`<p>${NOTES_INTRO}</p>`,
+   notes:["Kintsugi is a Japanese art of repairing broken pottery.","Repairs are made with lacquer mixed with powdered gold.","The visible seams are treated as part of the object’s history.","The practice dates to at least the 15th century."],
+   o:["Kintsugi, a Japanese art, dates to at least the 15th century.","Kintsugi is a way of repairing pottery with lacquer mixed with powdered gold.","Kintsugi repairs, which date to at least the 15th century, use powdered gold.","In kintsugi, a Japanese method of repairing pottery with gold-laced lacquer, the visible seams are treated as part of the object’s history rather than hidden."], a:3, w:[],
+   e:"Цель — объяснить философию видимых швов. Только D говорит, что швы воспринимаются как часть истории предмета; остальные варианты — про дату или материал." },
+ { d:'eoi', t:'Rhetorical Synthesis', q:"The student wants to emphasize a difference in sample size between the two studies. "+Q_SYN,
+   p:`<p>${NOTES_INTRO}</p>`,
+   notes:["A 2018 study of 500 teenagers found that students who used flashcards scored 12 percent higher on vocabulary tests than those who reread their notes.","A 2022 study of 80 college students found no significant difference between the two methods.","The 2018 study took place at one high school.","The 2022 study took place at three universities."],
+   o:["A 2018 study found flashcards helpful, while a 2022 study found no difference between the methods.","The 2018 study included 500 teenagers, whereas the 2022 study included only 80 college students.","The 2018 study took place at one high school, and the 2022 study took place at three universities.","Students who used flashcards in 2018 scored 12 percent higher than students who reread their notes."], a:1, w:[],
+   e:"Цель — сравнить размеры выборок: 500 против 80. A сравнивает результаты, C — места проведения, D — только одно исследование." },
+ { d:'eoi', t:'Rhetorical Synthesis', q:"The student wants to emphasize Tanaka’s early accomplishment. "+Q_SYN,
+   p:`<p>${NOTES_INTRO}</p>`,
+   notes:["Mei Tanaka learned chess at age five.","She earned the grandmaster title at fifteen.","At the time, she was the youngest person to do so.","She later became a national champion."],
+   o:["At fifteen, Mei Tanaka earned the grandmaster title, becoming the youngest person to do so at the time.","Mei Tanaka, who learned chess at age five, later became a national champion.","Mei Tanaka learned chess at five and earned the grandmaster title.","Mei Tanaka is a grandmaster and a national champion."], a:0, w:[],
+   e:"Нужно подчеркнуть ранность достижения: возраст 15 лет и статус самой молодой на тот момент — только в A." }
+];
+
+/* ------------------------- MODULE 2 · EASIER ------------------------- */
+const MODULE2_EASY = [
+ { d:'cs', t:'Words in Context', q:Q_WIC,
+   p:`<p>The hikers had to climb over huge ______ that had tumbled down the mountainside during the storm.</p>`,
+   o:["puddles","seeds","boulders","sketches"], a:2, w:['boulders'],
+   e:"То, что «скатилось с горы» и через что нужно «перелезать» — boulders (валуны)." },
+ { d:'cs', t:'Words in Context', q:Q_WIC,
+   p:`<p>Lack of money was the biggest ______ to the club’s plan to build a new clubhouse; without funding, the project could not move forward.</p>`,
+   o:["obstacle","trait","reward","surface"], a:0, w:['obstacle','trait','surface'],
+   e:"Нехватка денег мешает проекту — obstacle (препятствие, «то, что стоит поперёк пути»)." },
+ { d:'cs', t:'Words in Context', q:Q_WIC,
+   p:`<p>After submitting her application in March, Dana hopes to ______ a reply from the university before the end of April.</p>`,
+   o:["boast","ponder","persist","receive"], a:3, w:['receive','boast','ponder','persist'],
+   e:"Дана надеется получить ответ — receive. Остальные глаголы (хвастаться, размышлять, упорствовать) не сочетаются с «a reply»." },
+ { d:'cs', t:'Words in Context', q:Q_WIC,
+   p:`<p>Curiosity is a ______ common among scientists: nearly all of them describe a constant desire to ask why things happen.</p>`,
+   o:["surface","trait","yield","sanction"], a:1, w:['trait','surface','yield','sanction'],
+   e:"Trait — черта характера; «common among scientists… nearly all of them» подтверждает общую особенность." },
+ { d:'cs', t:'Text Structure and Purpose', q:Q_PURP,
+   p:`<p>Honeybees communicate the location of food through a “waggle dance.” The angle of the dance relative to vertical shows the direction of the food source relative to the sun, and the length of the waggle shows how far away it is.</p>`,
+   o:["To explain how honeybees use movement to share information","To argue that honeybees are the most intelligent insects","To describe how honey is produced","To compare the dances of different bee species"], a:0, w:[],
+   e:"Текст объясняет, как пчёлы передают информацию о еде с помощью танца. Остальные варианты в тексте не обсуждаются." },
+ { d:'cs', t:'Text Structure and Purpose', q:Q_FUNC,
+   p:`<p>Many people believe that goldfish have a memory of only three seconds. <u>In experiments, however, goldfish learned to push a lever to receive food and remembered how to do so weeks later.</u> Scientists now think the three-second belief is a myth.</p>`,
+   o:["It introduces a new myth about fish.","It defines the term “memory.”","It presents evidence that contradicts a popular belief.","It describes the author’s personal experience with goldfish."], a:2, w:['receive'],
+   e:"«However» + результаты экспериментов → подчёркнутое предложение опровергает популярное убеждение о трёхсекундной памяти." },
+ { d:'cs', t:'Cross-Text Connections', q:"Based on the texts, how would Kim most likely respond to Reyes’s proposal?",
+   p:`<p><b>Text 1</b></p><p>Educator Paulo Reyes argues that schools should replace paper textbooks with tablets, since tablets are lighter and can hold hundreds of books.</p><p><b>Text 2</b></p><p>Researcher Anna Kim notes that students who read on tablets sometimes remember less than those who read on paper, though she acknowledges that tablets offer clear advantages in portability.</p>`,
+   o:["By agreeing that schools should immediately discard all paper textbooks","By acknowledging that tablets have benefits while raising a concern about learning","By claiming that tablets are heavier than paper textbooks","By arguing that students dislike tablets"], a:1, w:['acknowledge'],
+   e:"Kim признаёт преимущества планшетов (portability), но указывает на проблему с запоминанием. Остальные варианты не соответствуют тексту." },
+ { d:'cs', t:'Text Structure and Purpose', q:Q_STRUC,
+   p:`<p>Sea turtles face many dangers. Hatchlings must first cross the beach, where birds and crabs hunt them. Those that reach the ocean then risk being caught in fishing nets. Conservation groups now protect nesting beaches and promote nets that let turtles escape.</p>`,
+   o:["It lists reasons sea turtles are unpopular with tourists.","It compares two species of sea turtle.","It describes a single rescue of a sea turtle.","It outlines threats to sea turtles and then notes efforts to address them."], a:3, w:[],
+   e:"Сначала перечисляются опасности, затем — меры по защите. Это точно отражает вариант D." },
+
+ { d:'ii', t:'Central Ideas and Details', q:Q_MAIN,
+   p:`<p>A new community garden opened on Elm Street last spring. Neighbors who had never spoken before now trade tips on tomatoes and share extra herbs. The garden’s organizer says that the vegetables are nice, but the real harvest has been friendship.</p>`,
+   o:["The garden has helped neighbors connect with one another.","Elm Street is a difficult place to grow vegetables.","Tomatoes grow best when they are shared.","Community gardens should be larger."], a:0, w:[],
+   e:"Главная мысль — сад сблизил соседей («the real harvest has been friendship»)." },
+ { d:'ii', t:'Inferences', q:Q_INF,
+   p:`<p>Maya noticed that her houseplant leaned toward the window every afternoon. When she turned the pot around, the plant slowly bent back toward the window over the next few days. Maya paused to ponder what she had seen and concluded that the plant ______</p>`,
+   o:["needs more water than other plants.","grows better in the dark.","grows toward sources of light.","dislikes being moved."], a:2, w:['ponder'],
+   e:"Растение тянется к окну, даже когда его развернули, — значит, оно растёт в сторону света." },
+ { d:'ii', t:'Command of Evidence (Textual)', q:"Which finding, if true, would most directly support the student’s claim?",
+   p:`<p>A student claims that her school’s new recycling program has been successful.</p>`,
+   o:["Many students say they like the new colorful bins.","The amount of trash the school sends to the landfill dropped by 30 percent after the program began.","Each recycling bin cost $200.","The program began in September."], a:1, w:[],
+   e:"Успех программы подтверждается измеримым результатом — сокращением мусора на 30%. Остальные факты об успехе ничего не говорят." },
+ { d:'ii', t:'Command of Evidence (Quantitative)', q:"Which choice most effectively uses data from the table to show that the robotics club’s membership grew more than any other club’s?",
+   p:`<p>A student is writing about changes in school club membership between 2022 and 2024.</p>`,
+   table:{ cap:'Club Membership', head:['Club','2022','2024'], rows:[['Chess','24','31'],['Robotics','15','27'],['Drama','30','22'],['Debate','12','14']] },
+   o:["The chess club grew from 24 members to 31 members.","The drama club had the most members in 2022, with 30.","The debate club grew from 12 members to 14 members.","The robotics club grew from 15 members to 27 members, an increase larger than any other club’s."], a:3, w:[],
+   e:"Robotics: +12 (15 → 27), chess: +7, debate: +2, drama: −8. Только D сравнивает рост с остальными клубами." },
+ { d:'ii', t:'Central Ideas and Details', q:Q_MAIN,
+   p:`<p>Leo had never been on a stage before. As the curtain rose, his hands shook, and the lines he had memorized seemed to vanish. Then he heard his sister whisper the first word from the wings, and the rest came back to him, one sentence at a time.</p>`,
+   o:["Leo decides to quit acting.","Leo’s sister scolds him for forgetting his lines.","Leo overcomes stage fright with help from his sister.","Leo has performed on stage many times before."], a:2, w:[],
+   e:"Лео волнуется, но сестра подсказывает первое слово, и он вспоминает роль. В тексте сказано, что он никогда не выступал на сцене." },
+ { d:'ii', t:'Inferences', q:Q_INF,
+   p:`<p>Ice cream sales and cases of sunburn both rise every summer. Some people might conclude that eating ice cream causes sunburn, but a more likely explanation is that ______</p>`,
+   o:["hot, sunny weather leads people both to eat ice cream and to spend time in the sun.","ice cream contains chemicals that harm the skin.","sunburn makes people crave ice cream.","ice cream is sold only in sunny places."], a:0, w:[],
+   e:"Общая причина — жаркая солнечная погода: корреляция не означает причинность." },
+ { d:'ii', t:'Command of Evidence (Textual)', q:"Which quotation from the text most effectively illustrates the claim that Priya works at her goal day after day?",
+   p:`<p>From the first day, Priya was fascinated by the old clock in the hallway. “I’ll find out how it works,” she told herself, and every evening she studied its gears with a flashlight. By spring she could take it apart and put it back together without a single mistake.</p>`,
+   o:["“Priya was fascinated by the old clock in the hallway.”","“every evening she studied its gears with a flashlight”","“‘I’ll find out how it works,’ she told herself”","“By spring she could take it apart and put it back together”"], a:1, w:[],
+   e:"Утверждение про регулярность усилий («день за днём») подтверждает «every evening she studied…». C — намерение, D — результат, A — интерес." },
+
+ { d:'sec', t:'Boundaries', q:Q_STD,
+   p:`<p>The bakery sells fresh bread every ______ sandwiches at lunch.</p>`,
+   o:["morning it also offers","morning, it also offers","morning; and it also offers","morning, and it also offers"], a:3, w:[],
+   e:"Две самостоятельные части соединяются запятой + союзом and. Без союза — comma splice, «; and» — неверно." },
+ { d:'sec', t:'Form, Structure, and Sense', q:Q_STD,
+   p:`<p>The books on the top shelf ______ about ancient Egypt.</p>`,
+   o:["are","is","was","be"], a:0, w:[],
+   e:"Подлежащее — «books» (мн. число); «on the top shelf» — предложная группа. Глагол: are." },
+ { d:'sec', t:'Form, Structure, and Sense', q:Q_STD,
+   p:`<p>Yesterday, Carlos ______ his bicycle to the park and met his friends there.</p>`,
+   o:["rides","ride","rode","ridden"], a:2, w:[],
+   e:"«Yesterday» → Past Simple. Неправильный глагол ride — rode." },
+ { d:'sec', t:'Boundaries', q:Q_STD,
+   p:`<p>The science fair included projects about ______ and solar panels.</p>`,
+   o:["volcanoes robots,","volcanoes, robots,","volcanoes; robots,","volcanoes: robots,"], a:1, w:[],
+   e:"Элементы перечисления разделяются запятыми: volcanoes, robots, and solar panels." },
+ { d:'sec', t:'Form, Structure, and Sense', q:Q_STD,
+   p:`<p>The museum is proud of ______ new collection of dinosaur fossils.</p>`,
+   o:["it’s","its’","it","its"], a:3, w:[],
+   e:"Притяжательное местоимение — its (без апострофа). It’s = it is." },
+ { d:'sec', t:'Form, Structure, and Sense', q:Q_STD,
+   p:`<p>The students left ______ backpacks in the hallway before entering the gym.</p>`,
+   o:["their","there","they’re","its"], a:0, w:[],
+   e:"Притяжательное местоимение для множественного числа — their." },
+ { d:'sec', t:'Boundaries', q:Q_STD,
+   p:`<p>Anika packed three items for the ______ a map, a compass, and a flashlight.</p>`,
+   o:["trip,","trip;","trip:","trip"], a:2, w:[],
+   e:"После полного предложения двоеточие вводит перечисление: …three items for the trip: a map, a compass, and a flashlight." },
+
+ { d:'eoi', t:'Transitions', q:Q_TR,
+   p:`<p>Maria loves to paint. ______ she spends every Saturday at the community art studio.</p>`,
+   o:["However,","As a result,","In contrast,","Otherwise,"], a:1, w:[],
+   e:"Любовь к рисованию — причина того, что она проводит субботы в студии: As a result." },
+ { d:'eoi', t:'Transitions', q:Q_TR,
+   p:`<p>The hike up the mountain was long and tiring. ______ the view from the top made every step worth it.</p>`,
+   o:["For example,","Similarly,","Therefore,","Still,"], a:3, w:[],
+   e:"Трудный подъём противопоставляется красивому виду: Still (всё же) — контрастный переход." },
+ { d:'eoi', t:'Rhetorical Synthesis', q:"The student wants to emphasize the depth of Lake Baikal. "+Q_SYN,
+   p:`<p>${NOTES_INTRO}</p>`,
+   notes:["Lake Baikal is in Russia.","It is the deepest lake in the world.","It is more than 1,600 meters deep.","It holds about 20 percent of the world’s unfrozen fresh water."],
+   o:["Lake Baikal in Russia is the world’s deepest lake, reaching more than 1,600 meters.","Lake Baikal is located in Russia.","Lake Baikal holds about 20 percent of the world’s unfrozen fresh water.","Lake Baikal is a lake."], a:0, w:[],
+   e:"Цель — подчеркнуть глубину; вариант A называет и титул «самое глубокое», и цифру." },
+ { d:'eoi', t:'Rhetorical Synthesis', q:"The student wants to emphasize the distance of the monarch butterfly migration. "+Q_SYN,
+   p:`<p>${NOTES_INTRO}</p>`,
+   notes:["Monarch butterflies migrate up to 3,000 miles.","They fly south each fall to Mexico.","The trip takes several weeks.","No single butterfly makes the whole round trip."],
+   o:["Monarch butterflies fly south each fall.","The monarch butterfly’s trip to Mexico takes several weeks.","Each fall, monarch butterflies migrate as far as 3,000 miles to reach Mexico.","No single monarch butterfly makes the whole round trip."], a:2, w:[],
+   e:"Нужно подчеркнуть расстояние. Только C называет его (3,000 miles); B говорит о длительности, D — о смене поколений." },
+ { d:'eoi', t:'Rhetorical Synthesis', q:"The student wants to inform residents about the service available during the library’s closure. "+Q_SYN,
+   p:`<p>${NOTES_INTRO}</p>`,
+   notes:["The Maple Street Library will close for renovations on June 1.","It will reopen in September.","A bookmobile will serve patrons during the closure."],
+   o:["The Maple Street Library will close on June 1 and reopen in September.","While the Maple Street Library is closed for renovations from June 1 until September, a bookmobile will serve patrons.","The Maple Street Library is being renovated.","Residents should visit the library in September."], a:1, w:[],
+   e:"Цель — рассказать, какая услуга доступна на время закрытия. Только B упоминает bookmobile." }
+];
+
+// ===== APP =====
+const $ = id => document.getElementById(id);
+const LETTERS = ['A', 'B', 'C', 'D'];
+const NQ = 27;
+const ALL_SITE_WORDS = ['ambivalent','discern','candid','skeptical','meticulous','plausible','innate','ambiguous','corroborate','reticent','sanction','temper','novel','yield','compound','wry','candor','terse','subtle','austere','attached','surface','boulders','unexpected','obstacle','receive','trait','substantial','ponder','prey','boast','persist','conventional wisdom','acknowledge','challenge'];
+
+const S = {
+  minutes: 30, mod: 0, route: null, idx: 0, deadline: 0, timerHidden: false, warned: false, timerId: null,
+  qs: [null, null], ans: [[], []], flag: [[], []], elim: [[], []], used: [0, 0], auto: [false, false]
+};
+
+function esc(s) { return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+function show(name) {
+  ['intro','test','review','break','results'].forEach(n => { $('screen-' + n).hidden = (n !== name); });
+  window.scrollTo(0, 0);
+}
+function toast(msg) {
+  const t = $('toast'); t.textContent = msg; t.hidden = false;
+  clearTimeout(toast._t); toast._t = setTimeout(() => { t.hidden = true; }, 4500);
+}
+
+/* ---------- intro ---------- */
+document.querySelectorAll('input[name=mins]').forEach(r => r.addEventListener('change', () => {
+  const m = document.querySelector('input[name=mins]:checked').value;
+  $('t1').textContent = m + ' мин'; $('t2').textContent = m + ' мин';
+}));
+$('btn-start').addEventListener('click', () => {
+  S.minutes = +document.querySelector('input[name=mins]:checked').value;
+  S.qs[0] = MODULE1;
+  startModule(0);
+});
+
+/* ---------- module flow ---------- */
+function startModule(m) {
+  S.mod = m; S.idx = 0; S.warned = false;
+  S.ans[m] = Array(NQ).fill(null);
+  S.flag[m] = Array(NQ).fill(false);
+  S.elim[m] = Array.from({ length: NQ }, () => []);
+  S.deadline = Date.now() + S.minutes * 60000;
+  clearInterval(S.timerId);
+  S.timerId = setInterval(tick, 400);
+  $('mod-label').textContent = 'Reading and Writing · Module ' + (m + 1);
+  $('nav-pop').hidden = true;
+  show('test');
+  renderQuestion();
+  tick();
+}
+function tick() {
+  const rem = Math.max(0, S.deadline - Date.now());
+  const mm = Math.floor(rem / 60000), ss = Math.floor((rem % 60000) / 1000);
+  const el = $('timer');
+  el.textContent = S.timerHidden ? '— : —' : String(mm).padStart(2, '0') + ':' + String(ss).padStart(2, '0');
+  el.classList.toggle('low', rem <= 300000);
+  if (rem <= 300000 && !S.warned) { S.warned = true; toast('Осталось 5 минут'); }
+  if (rem === 0) submitModule(true);
+}
+$('timer-toggle').addEventListener('click', () => {
+  S.timerHidden = !S.timerHidden;
+  $('timer-toggle').textContent = S.timerHidden ? 'Показать' : 'Скрыть';
+  tick();
+});
+
+/* ---------- rendering a question ---------- */
+function passageHTML(q) {
+  let h = '<div class="ptext">' + q.p + '</div>';
+  if (q.table) {
+    h += '<table class="data"><caption>' + esc(q.table.cap) + '</caption><tr>' + q.table.head.map(x => '<th>' + esc(x) + '</th>').join('') + '</tr>' +
+      q.table.rows.map(r => '<tr>' + r.map(x => '<td>' + esc(x) + '</td>').join('') + '</tr>').join('') + '</table>';
+  }
+  if (q.notes) h += '<ul class="notes">' + q.notes.map(n => '<li>' + esc(n) + '</li>').join('') + '</ul>';
+  return h;
+}
+function renderQuestion() {
+  const m = S.mod, i = S.idx, q = S.qs[m][i];
+  $('pane-passage').innerHTML = passageHTML(q);
+  $('pane-q').innerHTML =
+    '<div class="qhead"><span class="qnum">' + (i + 1) + '</span>' +
+    '<button class="flagbtn" id="flagbtn"></button></div>' +
+    '<p class="qtext">' + esc(q.q) + '</p><div id="opts"></div>';
+  $('flagbtn').addEventListener('click', () => { S.flag[m][i] = !S.flag[m][i]; renderFlag(); });
+  renderFlag(); renderOptions();
+  $('btn-nav').textContent = 'Вопрос ' + (i + 1) + ' из ' + NQ + ' ▴';
+  $('btn-back').disabled = (i === 0);
+  $('btn-next').textContent = (i === NQ - 1) ? 'К проверке' : 'Далее';
+  $('pane-passage').scrollTop = 0; $('pane-q').scrollTop = 0;
+}
+function renderFlag() {
+  const b = $('flagbtn'); const on = S.flag[S.mod][S.idx];
+  b.textContent = on ? '⚑ Отмечен для проверки' : '⚐ Отметить для проверки';
+  b.classList.toggle('on', on);
+}
+function renderOptions() {
+  const m = S.mod, i = S.idx, q = S.qs[m][i];
+  const wrap = $('opts'); wrap.innerHTML = '';
+  q.o.forEach((txt, k) => {
+    const row = document.createElement('div');
+    row.className = 'opt' + (S.ans[m][i] === k ? ' sel' : '') + (S.elim[m][i].includes(k) ? ' elim' : '');
+    row.innerHTML = '<button class="optmain"><span class="letter">' + LETTERS[k] + '</span><span class="otext">' + esc(txt) + '</span></button>' +
+      '<button class="strike" title="Вычеркнуть вариант">' + LETTERS[k] + '</button>';
+    row.querySelector('.optmain').addEventListener('click', () => {
+      S.ans[m][i] = (S.ans[m][i] === k) ? null : k;
+      S.elim[m][i] = S.elim[m][i].filter(x => x !== k);
+      renderOptions();
+    });
+    row.querySelector('.strike').addEventListener('click', () => {
+      const arr = S.elim[m][i];
+      if (arr.includes(k)) S.elim[m][i] = arr.filter(x => x !== k);
+      else { arr.push(k); if (S.ans[m][i] === k) S.ans[m][i] = null; }
+      renderOptions();
+    });
+    wrap.appendChild(row);
+  });
+}
+
+/* ---------- navigation ---------- */
+$('btn-back').addEventListener('click', () => { if (S.idx > 0) { S.idx--; renderQuestion(); } });
+$('btn-next').addEventListener('click', () => {
+  if (S.idx < NQ - 1) { S.idx++; renderQuestion(); } else openReview();
+});
+$('btn-to-review').addEventListener('click', openReview);
+function buildGrid(el, onClick) {
+  const m = S.mod; el.innerHTML = '';
+  for (let i = 0; i < NQ; i++) {
+    const b = document.createElement('button');
+    b.className = 'gq' + (S.ans[m][i] !== null ? ' ans' : '') + (S.flag[m][i] ? ' flag' : '') + (el.id === 'pop-grid' && i === S.idx ? ' cur' : '');
+    b.textContent = i + 1;
+    b.addEventListener('click', () => onClick(i));
+    el.appendChild(b);
+  }
+}
+$('btn-nav').addEventListener('click', () => {
+  const pop = $('nav-pop');
+  if (!pop.hidden) { pop.hidden = true; return; }
+  $('pop-title').textContent = 'Модуль ' + (S.mod + 1) + ' · вопросы';
+  buildGrid($('pop-grid'), i => { S.idx = i; $('nav-pop').hidden = true; renderQuestion(); });
+  pop.hidden = false;
+});
+$('pop-close').addEventListener('click', () => { $('nav-pop').hidden = true; });
+$('pop-review').addEventListener('click', openReview);
+
+/* ---------- review screen ---------- */
+function openReview() {
+  $('nav-pop').hidden = true;
+  $('confirm-box').hidden = true;
+  const m = S.mod;
+  $('rev-kicker').textContent = 'Модуль ' + (m + 1);
+  const answered = S.ans[m].filter(x => x !== null).length;
+  const flagged = S.flag[m].filter(Boolean).length;
+  $('rev-sub').textContent = 'Нажми на номер, чтобы вернуться к вопросу. Время идёт — таймер в верхней панели продолжает работать.';
+  $('rev-counts').textContent = 'С ответом: ' + answered + ' из ' + NQ + ' · Без ответа: ' + (NQ - answered) + ' · Отмечено: ' + flagged;
+  buildGrid($('rev-grid'), i => { S.idx = i; show('test'); renderQuestion(); });
+  show('review');
+}
+$('rev-back').addEventListener('click', () => { show('test'); renderQuestion(); });
+$('rev-submit').addEventListener('click', () => {
+  const m = S.mod;
+  const unanswered = S.ans[m].filter(x => x === null).length;
+  let txt = 'Отправить Модуль ' + (m + 1) + '? После отправки вернуться к вопросам нельзя.';
+  if (unanswered) txt = 'У тебя ' + unanswered + ' вопрос(ов) без ответа — они будут считаться неверными. ' + txt;
+  $('confirm-text').textContent = txt;
+  $('confirm-box').hidden = false;
+});
+$('confirm-no').addEventListener('click', () => { $('confirm-box').hidden = true; });
+$('confirm-yes').addEventListener('click', () => submitModule(false));
+
+function countCorrect(m, qs) {
+  let c = 0;
+  qs.forEach((q, i) => { if (S.ans[m][i] === q.a) c++; });
+  return c;
+}
+function submitModule(auto) {
+  clearInterval(S.timerId);
+  const m = S.mod;
+  S.used[m] = Math.min(S.minutes * 60, Math.round((Date.now() - (S.deadline - S.minutes * 60000)) / 1000));
+  S.auto[m] = !!auto;
+  $('nav-pop').hidden = true;
+  if (m === 0) {
+    const c1 = countCorrect(0, MODULE1);
+    S.route = c1 >= 17 ? 'hard' : 'easy';
+    S.qs[1] = S.route === 'hard' ? MODULE2_HARD : MODULE2_EASY;
+    const ans = S.ans[0].filter(x => x !== null).length;
+    $('break-info').textContent = (auto ? 'Время вышло, модуль отправлен автоматически. ' : '') + 'Ответов в Модуле 1: ' + ans + ' из ' + NQ + '.';
+    show('break');
+  } else {
+    showResults();
+  }
+}
+$('btn-start2').addEventListener('click', () => startModule(1));
+
+/* ---------- scoring ---------- */
+function estScore(m1, m2, hard) {
+  const w = m1 + m2 * (hard ? 1.3 : 0.65);
+  let s = 200 + 600 * Math.pow(w / 62.1, 0.75);
+  s = Math.round(s / 10) * 10;
+  return Math.max(200, Math.min(800, s));
+}
+
+/* ---------- results ---------- */
+function showResults() {
+  const hard = S.route === 'hard';
+  const m1 = countCorrect(0, S.qs[0]), m2 = countCorrect(1, S.qs[1]);
+  const sc = estScore(m1, m2, hard);
+  $('res-score').textContent = sc;
+  $('res-range').textContent = 'Ориентировочный диапазон: ' + Math.max(200, sc - 30) + '–' + Math.min(800, sc + 30) + ' (Reading & Writing, шкала 200–800)';
+  $('res-route').textContent = hard ? 'Модуль 2: повышенной сложности (higher-difficulty)' : 'Модуль 2: стандартной сложности (lower-difficulty)';
+  $('res-m1').textContent = m1 + '/' + NQ;
+  $('res-m2').textContent = m2 + '/' + NQ;
+  $('res-m2l').textContent = hard ? 'Модуль 2 (сложнее)' : 'Модуль 2 (легче)';
+  $('res-total').textContent = (m1 + m2) + '/' + (NQ * 2);
+
+  // domains
+  const stat = {}; ORDER.forEach(d => stat[d] = { c: 0, n: 0 });
+  [0, 1].forEach(m => S.qs[m].forEach((q, i) => { stat[q.d].n++; if (S.ans[m][i] === q.a) stat[q.d].c++; }));
+  $('res-domains').innerHTML = ORDER.map(d => {
+    const p = Math.round(stat[d].c / stat[d].n * 100);
+    return '<div class="drow"><div class="dl"><span>' + DOM[d] + '</span><b>' + stat[d].c + ' / ' + stat[d].n + '</b></div><div class="bar"><i style="width:' + p + '%"></i></div></div>';
+  }).join('');
+
+  // vocabulary
+  const missedWords = new Set(), seenWords = new Set();
+  [0, 1].forEach(m => S.qs[m].forEach((q, i) => {
+    (q.w || []).forEach(w => seenWords.add(w));
+    if (S.ans[m][i] !== q.a) (q.w || []).forEach(w => missedWords.add(w));
+  }));
+  if (missedWords.size) {
+    $('res-words-note').textContent = 'В тесте встретилось слов из тренажёра: ' + seenWords.size + ' из 35. В вопросах, где ты ошибся или не ответил, были такие слова — пройди по ним карточки ещё раз:';
+    $('res-words').innerHTML = [...missedWords].map(w => '<span class="chip">' + esc(w) + '</span>').join('');
+  } else {
+    $('res-words-note').textContent = 'В тесте встретилось слов из тренажёра: ' + seenWords.size + ' из 35. В вопросах со словами с сайта ошибок нет — отлично!';
+    $('res-words').innerHTML = '';
+  }
+
+  renderReviewList('all');
+  show('results');
+}
+function renderReviewList(filter) {
+  const list = $('review-list'); list.innerHTML = '';
+  [0, 1].forEach(m => {
+    S.qs[m].forEach((q, i) => {
+      const a = S.ans[m][i];
+      const ok = a === q.a, skip = a === null;
+      if (filter === 'wrong' && ok) return;
+      if (filter === 'flag' && !S.flag[m][i]) return;
+      const d = document.createElement('details'); d.className = 'rv';
+      const mod = 'M' + (m + 1) + ' · Q' + (i + 1);
+      d.innerHTML =
+        '<summary><span class="mark ' + (ok ? 'ok' : skip ? 'skip' : 'no') + '">' + (ok ? '✓' : skip ? '–' : '✕') + '</span>' +
+        '<span>' + mod + ' · ' + esc(q.t) + (S.flag[m][i] ? ' · ⚑' : '') + '</span></summary>' +
+        '<div class="rvbody"><div class="tagline">' + DOM[q.d] + (q.w && q.w.length ? ' · слова с сайта: ' + esc(q.w.join(', ')) : '') + '</div>' +
+        passageHTML(q) +
+        '<p class="qtext" style="margin-top:14px;">' + esc(q.q) + '</p>' +
+        q.o.map((t, k) => '<div class="ro' + (k === q.a ? ' correct' : (k === a ? ' wrong' : '')) + '"><b>' + LETTERS[k] + '</b><span>' + esc(t) +
+          (k === a ? ' <em class="muted">(твой ответ)</em>' : '') + '</span></div>').join('') +
+        '<div class="expl"><b>Разбор.</b> ' + esc(q.e) + '</div></div>';
+      list.appendChild(d);
+    });
+  });
+  if (!list.children.length) list.innerHTML = '<p class="muted">Здесь ничего нет.</p>';
+}
+$('filters').addEventListener('click', e => {
+  const b = e.target.closest('button'); if (!b) return;
+  [...$('filters').children].forEach(x => x.classList.toggle('on', x === b));
+  renderReviewList(b.dataset.f);
+});
+</script>
+</body>
+</html>

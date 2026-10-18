@@ -1,0 +1,833 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>SAT Verbal · Словарный тренажёр</title>
+<style>
+  :root {
+    --navy: #0C2340;
+    --navy2: #16335E;
+    --gold: #C9A227;
+    --accent: #7A3FE0;
+    --accent2: #0B5FFF;
+    --paper: #F6F7F9;
+    --line: #DCE1E9;
+    --ink: #1B2430;
+    --muted: #5A6577;
+    --bg: #F6F7F9;
+    --card-bg: #ffffff;
+    --card-back-bg: #0C2340;
+    --good: #0E9F6E;
+    --bad: #C0392B;
+    box-sizing: border-box;
+    padding-top: env(safe-area-inset-top, 0px);
+    padding-bottom: env(safe-area-inset-bottom, 0px);
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --bg: #0B1220;
+      --card-bg: #16203A;
+      --ink: #E7ECF5;
+      --muted: #9AA7C0;
+      --line: #2A3654;
+      --paper: #10192E;
+    }
+  }
+  :root[data-theme="dark"] {
+    --bg: #0B1220;
+    --card-bg: #16203A;
+    --ink: #E7ECF5;
+    --muted: #9AA7C0;
+    --line: #2A3654;
+    --paper: #10192E;
+  }
+  html { scroll-padding-top: env(safe-area-inset-top, 0px); height: 100%; }
+  * { box-sizing: border-box; }
+  body {
+    height: 100%;
+    margin: 0;
+    background: var(--bg);
+    color: var(--ink);
+    font-family: 'Helvetica Neue', Arial, sans-serif;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 24px 16px 48px;
+    min-height: 100vh;
+  }
+  .wrap { width: 100%; max-width: 720px; }
+  .header { text-align: center; margin-bottom: 16px; }
+  .kicker {
+    display: inline-block;
+    font-size: 11px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--muted);
+    border: 1px solid var(--line);
+    border-radius: 20px;
+    padding: 4px 12px;
+    margin-bottom: 10px;
+  }
+  h1 {
+    font-family: Georgia, serif;
+    font-size: 26px;
+    font-weight: 400;
+    color: var(--navy);
+    margin: 0;
+  }
+  :root[data-theme="dark"] h1, @media (prefers-color-scheme: dark) { }
+  .dark h1 { color: #ffffff; }
+
+  nav.tabs {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 6px;
+    background: var(--card-bg);
+    border: 1px solid var(--line);
+    border-radius: 14px;
+    padding: 5px;
+    margin: 18px 0 24px;
+  }
+  nav.tabs button {
+    font-family: inherit;
+    font-size: 12.5px;
+    font-weight: 700;
+    padding: 10px 6px;
+    border: none;
+    border-radius: 10px;
+    background: transparent;
+    color: var(--muted);
+    cursor: pointer;
+  }
+  nav.tabs button.active {
+    background: var(--navy);
+    color: #ffffff;
+  }
+
+  section.view { display: none; }
+  section.view.active { display: block; }
+
+  .set-heading {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin: 4px 0 14px;
+  }
+  .set-heading .dot { width: 12px; height: 12px; border-radius: 50%; }
+  .set-heading h2 { font-size: 17px; font-weight: 800; color: var(--navy); margin: 0; }
+  .dark .set-heading h2 { color: #ffffff; }
+
+  .progress-wrap { margin: 10px 0 18px; }
+  .progress-track { height: 6px; background: var(--line); border-radius: 6px; overflow: hidden; }
+  .progress-fill { height: 100%; background: var(--accent); border-radius: 6px; transition: width 0.3s ease; }
+  .progress-label { text-align: center; font-size: 12.5px; color: var(--muted); margin-top: 7px; }
+
+  .stage { perspective: 1600px; }
+  .card {
+    position: relative;
+    width: 100%;
+    height: 320px;
+    cursor: pointer;
+    transform-style: preserve-3d;
+    transition: transform 0.5s cubic-bezier(.2,.8,.2,1);
+  }
+  .card.flipped { transform: rotateY(180deg); }
+  .face {
+    position: absolute;
+    inset: 0;
+    backface-visibility: hidden;
+    border-radius: 18px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 30px;
+    text-align: center;
+  }
+  .face.front { background: var(--card-bg); border: 1px solid var(--line); box-shadow: 0 10px 30px rgba(12,35,64,0.08); }
+  .face.back { background: var(--card-back-bg); color: #ffffff; transform: rotateY(180deg); }
+  .tag-pos {
+    display: inline-block;
+    font-size: 11.5px;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    color: var(--accent);
+    border: 1px solid var(--accent);
+    border-radius: 20px;
+    padding: 3px 11px;
+    margin-bottom: 14px;
+  }
+  .tag-set {
+    position: absolute;
+    top: 16px;
+    right: 16px;
+    font-size: 10.5px;
+    font-weight: 800;
+    letter-spacing: 0.5px;
+    padding: 3px 9px;
+    border-radius: 8px;
+    color: #ffffff;
+  }
+  .tag-set.s1 { background: var(--accent); }
+  .tag-set.s2 { background: var(--accent2); }
+  .tag-set.s3 { background: var(--good); }
+  @media (max-width: 520px) { nav.tabs button { font-size: 11px; padding: 10px 2px; } }
+  .word { font-family: Georgia, serif; font-size: 36px; font-weight: 400; color: var(--navy); }
+  .dark .word { color: #ffffff; }
+  .hint { margin-top: 16px; font-size: 12.5px; color: var(--muted); }
+  .def-label { font-size: 11.5px; letter-spacing: 1.5px; text-transform: uppercase; color: #C9A227; margin-bottom: 9px; }
+  .def { font-size: 18px; line-height: 1.5; margin-bottom: 16px; }
+  .example { font-size: 14.5px; line-height: 1.5; font-style: italic; color: #DCE6FF; border-top: 1px solid rgba(255,255,255,0.2); padding-top: 13px; }
+
+  .controls { display: flex; align-items: center; gap: 12px; margin-top: 22px; justify-content: center; }
+  button.ctrl {
+    font-family: inherit; font-size: 14px; font-weight: 600; border-radius: 12px; border: none;
+    padding: 13px 18px; cursor: pointer; transition: opacity 0.15s ease, transform 0.1s ease;
+  }
+  button.ctrl:active { transform: scale(0.97); }
+  .btn-nav { background: var(--card-bg); color: var(--navy); border: 1px solid var(--line); min-width: 52px; }
+  .dark .btn-nav { color: #ffffff; }
+  .btn-flip { background: var(--navy); color: #ffffff; flex: 1; max-width: 220px; }
+  .btn-nav:disabled { opacity: 0.35; cursor: default; }
+
+  .dots { display: flex; gap: 6px; flex-wrap: wrap; justify-content: center; margin-top: 20px; }
+  .dot-i { width: 8px; height: 8px; border-radius: 50%; background: var(--line); cursor: pointer; }
+  .dot-i.active { background: var(--accent); }
+  .dot-i.done { background: var(--gold); }
+
+  .roots-block { margin-top: 40px; }
+  .roots-title { font-size: 15px; font-weight: 800; color: var(--navy); margin: 0 0 12px; }
+  .dark .roots-title { color: #ffffff; }
+  .root-card {
+    background: var(--card-bg);
+    border: 1px solid var(--line);
+    border-radius: 14px;
+    padding: 18px 20px;
+    margin-bottom: 12px;
+  }
+  .root-top { display: flex; align-items: baseline; gap: 10px; margin-bottom: 10px; }
+  .root-name { font-family: Georgia, serif; font-size: 20px; color: var(--accent); }
+  .root-meaning { font-size: 13px; color: var(--muted); }
+  .root-examples { display: flex; flex-direction: column; gap: 5px; }
+  .root-ex { font-size: 13.5px; }
+  .root-ex b { color: var(--ink); }
+  .dark .root-ex b { color: #ffffff; }
+  .root-ex .src-tag { font-size: 10.5px; color: var(--gold); font-weight: 700; margin-left: 6px; }
+
+  .footer-note { margin-top: 26px; font-size: 12px; color: var(--muted); text-align: center; }
+
+  /* quiz */
+  .quiz-scope { display: flex; flex-direction: column; gap: 10px; margin-top: 10px; }
+  .scope-btn {
+    text-align: left; padding: 16px 18px; border-radius: 14px; border: 1px solid var(--line);
+    background: var(--card-bg); cursor: pointer; font-family: inherit;
+  }
+  .scope-btn b { display: block; font-size: 15px; color: var(--navy); margin-bottom: 3px; }
+  .dark .scope-btn b { color: #ffffff; }
+  .scope-btn span { font-size: 12.5px; color: var(--muted); }
+  .scope-btn:hover { border-color: var(--accent); }
+
+  .q-word-box {
+    background: var(--navy); color: #ffffff; border-radius: 16px; padding: 30px; text-align: center; margin-bottom: 18px;
+  }
+  .q-word-box .lbl { font-size: 11.5px; letter-spacing: 1.5px; text-transform: uppercase; color: #9FB2D9; margin-bottom: 10px; }
+  .q-word-box .w { font-family: Georgia, serif; font-size: 34px; }
+  .q-opt {
+    display: block; width: 100%; text-align: left; padding: 15px 18px; border-radius: 12px;
+    border: 1px solid var(--line); background: var(--card-bg); margin-bottom: 10px; font-family: inherit;
+    font-size: 14.5px; cursor: pointer; color: var(--ink);
+  }
+  .dark .q-opt { color: #E7ECF5; }
+  .q-opt.correct { border-color: var(--good); background: rgba(14,159,110,0.12); font-weight: 700; }
+  .q-opt.wrong { border-color: var(--bad); background: rgba(192,57,43,0.12); }
+  .q-opt:disabled { cursor: default; }
+  .q-footer { display: flex; justify-content: space-between; align-items: center; margin-top: 6px; }
+  .q-score { font-size: 13px; color: var(--muted); }
+  .btn-next { background: var(--navy); color: #fff; padding: 12px 22px; border-radius: 12px; border: none; font-family: inherit; font-weight: 600; cursor: pointer; }
+  .btn-next:disabled { opacity: 0.35; cursor: default; }
+
+  .result-box { text-align: center; padding: 20px 0; }
+  .result-score { font-family: Georgia, serif; font-size: 52px; color: var(--navy); }
+  .dark .result-score { color: #ffffff; }
+  .result-sub { font-size: 14px; color: var(--muted); margin-top: 4px; margin-bottom: 24px; }
+  .miss-item { background: var(--card-bg); border: 1px solid var(--line); border-radius: 12px; padding: 14px 16px; margin-bottom: 10px; text-align: left; }
+  .miss-item b { color: var(--accent); }
+  .result-actions { display: flex; gap: 10px; margin-top: 20px; justify-content: center; flex-wrap: wrap; }
+  .btn-secondary { background: var(--card-bg); border: 1px solid var(--line); color: var(--navy); padding: 12px 18px; border-radius: 12px; font-family: inherit; font-weight: 600; cursor: pointer; }
+  .dark .btn-secondary { color: #ffffff; }
+
+  /* link to mock test */
+  .mock-link {
+    display: flex; align-items: center; justify-content: space-between; gap: 14px;
+    margin: 16px 0 0; padding: 14px 18px; border-radius: 14px; text-decoration: none;
+    background: var(--navy); color: #ffffff;
+  }
+  .mock-link b { display: block; font-size: 14.5px; }
+  .mock-link span { font-size: 12.5px; color: #9FB2D9; }
+  .mock-link .arrow { font-size: 20px; flex: none; }
+  .mock-link:hover { background: var(--navy2); }
+  a.btn-secondary { text-decoration: none; display: inline-block; }
+</style>
+</head>
+<body id="bodyEl">
+<div class="wrap">
+
+  <div class="header">
+    <span class="kicker">SAT Verbal · Craft &amp; Structure</span>
+    <h1>Словарный тренажёр</h1>
+    <a class="mock-link" href="sat-verbal-mock-test.html">
+      <div style="text-align:left;"><b>Полный mock-тест SAT Verbal</b><span>2 модуля по 27 вопросов · слова отсюда встречаются в тексте</span></div>
+      <div class="arrow">→</div>
+    </a>
+  </div>
+
+  <nav class="tabs">
+    <button data-tab="set1" class="active">Сет 1 · Урок 8</button>
+    <button data-tab="set2">Сет 2 · Урок 9</button>
+    <button data-tab="set3">Сет 3</button>
+    <button data-tab="all">Все сеты</button>
+    <button data-tab="quiz">Тест</button>
+  </nav>
+
+  <!-- SET 1 VIEW -->
+  <section class="view active" id="view-set1">
+    <div class="set-heading"><div class="dot" style="background:#7A3FE0"></div><h2>Сет 1 · Урок 8 · Words in Context — контекстные подсказки</h2></div>
+    <div class="progress-wrap">
+      <div class="progress-track"><div class="progress-fill" id="pf-set1"></div></div>
+      <div class="progress-label" id="pl-set1">1 / 10</div>
+    </div>
+    <div class="stage"><div class="card" id="card-set1"></div></div>
+    <div class="controls">
+      <button class="ctrl btn-nav" id="prev-set1">←</button>
+      <button class="ctrl btn-flip" id="flip-set1">Перевернуть</button>
+      <button class="ctrl btn-nav" id="next-set1">→</button>
+    </div>
+    <div class="dots" id="dots-set1"></div>
+
+    <div class="roots-block">
+      <p class="roots-title">Корни слов — Сет 1</p>
+      <div id="roots-set1"></div>
+    </div>
+  </section>
+
+  <!-- SET 2 VIEW -->
+  <section class="view" id="view-set2">
+    <div class="set-heading"><div class="dot" style="background:#0B5FFF"></div><h2>Сет 2 · Урок 9 · Words in Context — многозначные слова и тон</h2></div>
+    <div class="progress-wrap">
+      <div class="progress-track"><div class="progress-fill" id="pf-set2"></div></div>
+      <div class="progress-label" id="pl-set2">1 / 10</div>
+    </div>
+    <div class="stage"><div class="card" id="card-set2"></div></div>
+    <div class="controls">
+      <button class="ctrl btn-nav" id="prev-set2">←</button>
+      <button class="ctrl btn-flip" id="flip-set2">Перевернуть</button>
+      <button class="ctrl btn-nav" id="next-set2">→</button>
+    </div>
+    <div class="dots" id="dots-set2"></div>
+
+    <div class="roots-block">
+      <p class="roots-title">Корни слов — Сет 2</p>
+      <div id="roots-set2"></div>
+    </div>
+  </section>
+
+  <!-- SET 3 VIEW -->
+  <section class="view" id="view-set3">
+    <div class="set-heading"><div class="dot" style="background:#0E9F6E"></div><h2>Сет 3 · Words in Context — слова из текста</h2></div>
+    <div class="progress-wrap">
+      <div class="progress-track"><div class="progress-fill" id="pf-set3"></div></div>
+      <div class="progress-label" id="pl-set3">1 / 15</div>
+    </div>
+    <div class="stage"><div class="card" id="card-set3"></div></div>
+    <div class="controls">
+      <button class="ctrl btn-nav" id="prev-set3">←</button>
+      <button class="ctrl btn-flip" id="flip-set3">Перевернуть</button>
+      <button class="ctrl btn-nav" id="next-set3">→</button>
+    </div>
+    <div class="dots" id="dots-set3"></div>
+
+    <div class="roots-block">
+      <p class="roots-title">Корни слов — Сет 3</p>
+      <div id="roots-set3"></div>
+    </div>
+  </section>
+
+  <!-- ALL SETS VIEW -->
+  <section class="view" id="view-all">
+    <div class="set-heading"><div class="dot" style="background:#C9A227"></div><h2>Все сеты · 35 слов</h2></div>
+    <div class="progress-wrap">
+      <div class="progress-track"><div class="progress-fill" id="pf-all"></div></div>
+      <div class="progress-label" id="pl-all">1 / 35</div>
+    </div>
+    <div class="stage"><div class="card" id="card-all"></div></div>
+    <div class="controls">
+      <button class="ctrl btn-nav" id="prev-all">←</button>
+      <button class="ctrl btn-flip" id="flip-all">Перевернуть</button>
+      <button class="ctrl btn-nav" id="next-all">→</button>
+    </div>
+    <div class="dots" id="dots-all"></div>
+
+    <div class="roots-block">
+      <p class="roots-title">Корни слов — Сет 1</p>
+      <div id="roots-all-1"></div>
+      <p class="roots-title" style="margin-top:24px;">Корни слов — Сет 2</p>
+      <div id="roots-all-2"></div>
+      <p class="roots-title" style="margin-top:24px;">Корни слов — Сет 3</p>
+      <div id="roots-all-3"></div>
+    </div>
+  </section>
+
+  <!-- QUIZ VIEW -->
+  <section class="view" id="view-quiz">
+    <div id="quiz-scope-screen">
+      <div class="set-heading"><div class="dot" style="background:#C0392B"></div><h2>Тест на знание слов</h2></div>
+      <p style="font-size:13.5px; color:var(--muted); margin-bottom:16px;">Выбери, какие слова проверить. На каждое слово — 4 варианта значения, нужно выбрать верный.</p>
+      <div class="quiz-scope">
+        <button class="scope-btn" data-scope="set1"><b>Сет 1 · Урок 8</b><span>10 вопросов</span></button>
+        <button class="scope-btn" data-scope="set2"><b>Сет 2 · Урок 9</b><span>10 вопросов</span></button>
+        <button class="scope-btn" data-scope="set3"><b>Сет 3</b><span>15 вопросов</span></button>
+        <button class="scope-btn" data-scope="all"><b>Все сеты</b><span>35 вопросов</span></button>
+      </div>
+    </div>
+
+    <div id="quiz-run-screen" style="display:none;">
+      <div class="progress-wrap">
+        <div class="progress-track"><div class="progress-fill" id="pf-quiz"></div></div>
+        <div class="progress-label" id="pl-quiz">Вопрос 1 / 10</div>
+      </div>
+      <div class="q-word-box">
+        <div class="lbl">Что означает это слово?</div>
+        <div class="w" id="quiz-word">word</div>
+      </div>
+      <div id="quiz-options"></div>
+      <div class="q-footer">
+        <div class="q-score" id="quiz-score">Верно: 0</div>
+        <button class="btn-next" id="quiz-next" disabled>Далее →</button>
+      </div>
+    </div>
+
+    <div id="quiz-result-screen" style="display:none;">
+      <div class="result-box">
+        <div class="result-score" id="result-score">8/10</div>
+        <div class="result-sub" id="result-sub">Хороший результат!</div>
+      </div>
+      <div id="result-misses"></div>
+      <div class="result-actions">
+        <button class="btn-next" id="quiz-restart">Пройти ещё раз</button>
+        <button class="btn-secondary" id="quiz-back">Выбрать другой сет</button>
+        <a class="btn-secondary" href="sat-verbal-mock-test.html">Пройти mock-тест →</a>
+      </div>
+    </div>
+  </section>
+
+  <div class="footer-note">Нажимай на карточку, чтобы увидеть перевод и пример. Проверяй себя тестом после нескольких проходов.</div>
+
+</div>
+
+<script>
+  const set1Words = [
+    { word: "ambivalent", pos: "adjective", def: "противоречивый, испытывающий смешанные чувства", example: "\"She felt ambivalent about the promotion, excited but wary of the added stress.\"" },
+    { word: "discern", pos: "verb", def: "различать, распознавать нечто неочевидное", example: "\"It was hard to discern his true intentions from his carefully worded email.\"" },
+    { word: "candid", pos: "adjective", def: "честный, откровенный, без утайки", example: "\"In a candid interview, the actor admitted her early career had been a struggle.\"" },
+    { word: "skeptical", pos: "adjective", def: "сомневающийся, не склонный сразу верить", example: "\"The scientist remained skeptical of the results until the experiment was repeated.\"" },
+    { word: "meticulous", pos: "adjective", def: "очень внимательный к деталям, скрупулёзный", example: "\"The meticulous editor caught every inconsistency in the manuscript.\"" },
+    { word: "plausible", pos: "adjective", def: "правдоподобный, звучащий разумно", example: "\"Her explanation for the delay was plausible, so the manager accepted it.\"" },
+    { word: "innate", pos: "adjective", def: "врождённый, присущий от природы", example: "\"Some researchers argue that a sense of rhythm is innate in humans.\"" },
+    { word: "ambiguous", pos: "adjective", def: "неоднозначный, допускающий разные толкования", example: "\"The instructions were so ambiguous that half the class misunderstood them.\"" },
+    { word: "corroborate", pos: "verb", def: "подтверждать (фактами, показаниями)", example: "\"Three witnesses corroborated the driver's account of the accident.\"" },
+    { word: "reticent", pos: "adjective", def: "неразговорчивый, сдержанный в высказываниях", example: "\"He was strangely reticent about his time abroad.\"" }
+  ];
+
+  const set2Words = [
+    { word: "sanction", pos: "verb / noun", def: "гл. официально одобрить, разрешить; сущ. санкция, наказание", example: "\"The board finally chose to sanction the merger.\"" },
+    { word: "temper", pos: "verb / noun", def: "гл. смягчать, умерять; сущ. нрав, вспыльчивость", example: "\"Success had tempered his early arrogance.\"" },
+    { word: "novel", pos: "adjective / noun", def: "прил. новый, необычный; сущ. роман (книга)", example: "\"Her novel approach to teaching surprised the committee.\"" },
+    { word: "yield", pos: "verb", def: "уступать, сдаваться; или производить, приносить (урожай)", example: "\"The field yielded a record harvest despite the drought.\"" },
+    { word: "compound", pos: "verb / adjective", def: "гл. усугублять, усложнять; прил. составной, сложный", example: "\"Poor planning compounded the project's delays.\"" },
+    { word: "wry", pos: "adjective", def: "сухо-ироничный, с лёгкой насмешкой", example: "\"He gave a wry smile at the absurdity of the situation.\"" },
+    { word: "candor", pos: "noun", def: "откровенность, прямота в высказываниях", example: "\"Her candor about the company's struggles surprised the reporters.\"" },
+    { word: "terse", pos: "adjective", def: "краткий, сдержанный, почти резкий", example: "\"His terse reply suggested he did not want to discuss it further.\"" },
+    { word: "subtle", pos: "adjective", def: "неочевидный, тонкий, едва уловимый", example: "\"There was a subtle shift in her tone that only close friends would notice.\"" },
+    { word: "austere", pos: "adjective", def: "строгий, суровый, лишённый излишеств", example: "\"The monastery's austere lifestyle left little room for indulgence.\"" }
+  ];
+
+  const roots1 = [
+    { root: "AMBI-", meaning: "оба, с двух сторон", examples: [
+      { word: "ambivalent", gloss: "противоречивый — чувства «с двух сторон»", src: "Сет 1" },
+      { word: "ambiguous", gloss: "неоднозначный — «ведёт в обе стороны»", src: "Сет 1" },
+      { word: "ambient", gloss: "окружающий (со всех сторон)" },
+      { word: "ambidextrous", gloss: "одинаково владеющий обеими руками" }
+    ]},
+    { root: "CERN / CERT", meaning: "различать, устанавливать точно", examples: [
+      { word: "discern", gloss: "различать, распознавать", src: "Сет 1" },
+      { word: "concern", gloss: "забота; касаться (букв. «различать вместе»)" },
+      { word: "certain", gloss: "точный, определённый" },
+      { word: "ascertain", gloss: "точно установить, выяснить" }
+    ]},
+    { root: "CAND", meaning: "сиять, быть чистым/белым", examples: [
+      { word: "candid", gloss: "искренний, откровенный (букв. «светлый»)", src: "Сет 1" },
+      { word: "candor", gloss: "откровенность (родств. слово из Сета 2)" },
+      { word: "incandescent", gloss: "раскалённый, светящийся" },
+      { word: "candidate", gloss: "кандидат (в Риме — носящий белую тогу)" }
+    ]},
+    { root: "ROBOR / ROBUST", meaning: "сила, крепость (лат. robur — дуб)", examples: [
+      { word: "corroborate", gloss: "подтверждать, «укреплять» довод фактами", src: "Сет 1" },
+      { word: "robust", gloss: "крепкий, выносливый" },
+      { word: "reinforce", gloss: "укреплять, усиливать" },
+      { word: "invigorate", gloss: "придавать силы, бодрить" }
+    ]},
+    { root: "TAC / TIC", meaning: "молчание, молчать", examples: [
+      { word: "reticent", gloss: "неразговорчивый, сдержанный", src: "Сет 1" },
+      { word: "tacit", gloss: "молчаливый, подразумеваемый" },
+      { word: "taciturn", gloss: "немногословный по характеру" },
+      { word: "reticence", gloss: "сдержанность, немногословность" }
+    ]}
+  ];
+
+  const roots2 = [
+    { root: "SANCT", meaning: "священный, неприкосновенный", examples: [
+      { word: "sanction", gloss: "официально одобрить / санкция", src: "Сет 2" },
+      { word: "sanctuary", gloss: "убежище, святилище" },
+      { word: "sanctify", gloss: "освящать" },
+      { word: "sanctimonious", gloss: "показно благочестивый" }
+    ]},
+    { root: "NOV", meaning: "новый", examples: [
+      { word: "novel", gloss: "новый, необычный / роман", src: "Сет 2" },
+      { word: "novice", gloss: "новичок" },
+      { word: "innovate", gloss: "внедрять новое" },
+      { word: "renovate", gloss: "обновлять, ремонтировать" }
+    ]},
+    { root: "PON / POS", meaning: "помещать, ставить", examples: [
+      { word: "compound", gloss: "составной; усугублять — «класть вместе»", src: "Сет 2" },
+      { word: "component", gloss: "составная часть" },
+      { word: "compose", gloss: "составлять, сочинять" },
+      { word: "postpone", gloss: "откладывать (букв. «ставить после»)" }
+    ]},
+    { root: "TEMPOR / TEMPER", meaning: "время; смешивать, умерять", examples: [
+      { word: "temper", gloss: "смягчать / нрав, вспыльчивость", src: "Сет 2" },
+      { word: "temperature", gloss: "температура" },
+      { word: "contemporary", gloss: "современный, современник" },
+      { word: "temperament", gloss: "темперамент, нрав" }
+    ]},
+    { root: "SUB-", meaning: "под, ниже", examples: [
+      { word: "subtle", gloss: "тонкий, едва уловимый (букв. «под тканью»)", src: "Сет 2" },
+      { word: "subordinate", gloss: "подчинённый" },
+      { word: "submerge", gloss: "погружать под воду" },
+      { word: "subside", gloss: "оседать, стихать" }
+    ]}
+  ];
+
+  const set3Words = [
+    { word: "attached", pos: "adjective / verb", def: "прил. прикреплённый, приложенный; привязанный (к кому-то или чему-то)", example: "\"She was deeply attached to her grandmother's old house, even though it needed repairs.\"" },
+    { word: "surface", pos: "noun / verb", def: "сущ. поверхность; внешняя сторона; гл. всплывать, проявляться", example: "\"Beneath the calm surface of the lake, strong currents were at work.\"" },
+    { word: "boulders", pos: "noun (plural)", def: "валуны, крупные округлые камни", example: "\"Hikers had to climb over massive boulders left behind by an ancient glacier.\"" },
+    { word: "unexpected", pos: "adjective", def: "неожиданный, непредвиденный", example: "\"The unexpected results forced the team to rethink their hypothesis.\"" },
+    { word: "obstacle", pos: "noun", def: "препятствие, помеха", example: "\"Lack of funding was the main obstacle to completing the project.\"" },
+    { word: "to receive", pos: "verb", def: "получать; принимать (что-то отправленное или данное)", example: "\"The author received widespread praise for her debut novel.\"" },
+    { word: "trait", pos: "noun", def: "черта, характерная особенность (характера или организма)", example: "\"Curiosity is a trait shared by nearly all successful researchers.\"" },
+    { word: "substantial", pos: "adjective", def: "значительный, существенный, весомый", example: "\"The study found a substantial increase in crop yields.\"" },
+    { word: "to ponder", pos: "verb", def: "обдумывать, размышлять, взвешивать в уме", example: "\"He paused to ponder the consequences before signing the contract.\"" },
+    { word: "to prey / prey", pos: "verb / noun", def: "гл. (to prey on) охотиться на, питаться; наживаться на слабости; сущ. prey — добыча, жертва", example: "\"Owls prey on small rodents, and a mouse in an open field is easy prey.\"" },
+    { word: "to boast", pos: "verb", def: "хвастаться; (о месте или вещи) гордиться наличием чего-либо, располагать", example: "\"The city boasts more than fifty museums.\"" },
+    { word: "to persist", pos: "verb", def: "упорствовать, настойчиво продолжать; сохраняться вопреки трудностям", example: "\"Despite repeated failures, the inventor persisted in testing new designs.\"" },
+    { word: "conventional wisdom", pos: "noun phrase", def: "общепринятое мнение, «все знают, что…» (conventional — привычный, общепринятый; wisdom — мудрость)", example: "\"Conventional wisdom said the new café would fail, but it was packed from day one.\"" },
+    { word: "to acknowledge", pos: "verb", def: "признавать (факт, ошибку, заслугу); подтверждать получение", example: "\"The senator acknowledged that her earlier forecast had been wrong.\"" },
+    { word: "to challenge", pos: "verb / noun", def: "гл. оспаривать, ставить под сомнение; бросать вызов; сущ. вызов, сложная задача", example: "\"The researcher challenged the long-held assumption with new evidence.\"" }
+  ];
+
+  const roots3 = [
+    { root: "STA / SIST", meaning: "стоять", examples: [
+      { word: "obstacle", gloss: "препятствие — то, что «стоит поперёк пути»", src: "Сет 3" },
+      { word: "substantial", gloss: "существенный — «стоящий под» (основой)", src: "Сет 3" },
+      { word: "persist", gloss: "упорствовать — «стоять до конца»", src: "Сет 3" },
+      { word: "resist", gloss: "сопротивляться — «стоять против»" }
+    ]},
+    { root: "SPECT / SPEC", meaning: "смотреть", examples: [
+      { word: "unexpected", gloss: "неожиданный — не тот, которого «высматривали» (ex-spect)", src: "Сет 3" },
+      { word: "inspect", gloss: "осматривать, проверять" },
+      { word: "prospect", gloss: "перспектива (то, что видно впереди)" },
+      { word: "spectator", gloss: "зритель" }
+    ]},
+    { root: "VEN / VENT", meaning: "приходить, сходиться", examples: [
+      { word: "conventional", gloss: "общепринятый — то, о чём «сошлись вместе»", src: "Сет 3" },
+      { word: "convene", gloss: "собираться, созывать" },
+      { word: "intervene", gloss: "вмешиваться (букв. «приходить между»)" },
+      { word: "prevent", gloss: "предотвращать («приходить раньше»)" }
+    ]},
+    { root: "CEIV / CEPT / CAP", meaning: "брать, хватать", examples: [
+      { word: "to receive", gloss: "получать — «брать обратно к себе»", src: "Сет 3" },
+      { word: "accept", gloss: "принимать, соглашаться" },
+      { word: "perceive", gloss: "воспринимать, замечать" },
+      { word: "capture", gloss: "захватывать, брать в плен" }
+    ]},
+    { root: "PEND / POND", meaning: "вешать, взвешивать", examples: [
+      { word: "to ponder", gloss: "обдумывать — «взвешивать» мысль в уме", src: "Сет 3" },
+      { word: "depend", gloss: "зависеть (букв. «висеть на чём-то»)" },
+      { word: "pendulum", gloss: "маятник" },
+      { word: "ponderous", gloss: "тяжеловесный, громоздкий" }
+    ]},
+    { root: "TRACT", meaning: "тянуть, проводить (линию)", examples: [
+      { word: "trait", gloss: "черта — «проведённая линия», штрих", src: "Сет 3" },
+      { word: "attract", gloss: "притягивать, привлекать" },
+      { word: "extract", gloss: "извлекать" },
+      { word: "distract", gloss: "отвлекать («оттягивать» внимание)" }
+    ]},
+    { root: "GNO / KNOW", meaning: "знать, узнавать", examples: [
+      { word: "to acknowledge", gloss: "признавать — «давать знать», что знаешь о факте", src: "Сет 3" },
+      { word: "recognize", gloss: "узнавать, признавать" },
+      { word: "ignore", gloss: "игнорировать («не желать знать»)" },
+      { word: "cognitive", gloss: "познавательный, когнитивный" }
+    ]},
+    { root: "PRED / PREHEND", meaning: "хватать, захватывать", examples: [
+      { word: "to prey / prey", gloss: "добыча; охотиться — то, что «схвачено»", src: "Сет 3" },
+      { word: "predator", gloss: "хищник" },
+      { word: "comprehend", gloss: "постигать, «схватывать» смысл" },
+      { word: "apprehend", gloss: "задерживать; постигать" }
+    ]}
+  ];
+
+  const allWords = set1Words.map(w => Object.assign({ setId: "s1" }, w))
+    .concat(set2Words.map(w => Object.assign({ setId: "s2" }, w)))
+    .concat(set3Words.map(w => Object.assign({ setId: "s3" }, w)));
+
+  // ---------- Flashcard deck engine ----------
+  function makeDeck(containerId, dotsId, pfId, plId, prevId, nextId, flipId, words, showSetTag) {
+    let index = 0;
+    let flipped = false;
+    const cardEl = document.getElementById(containerId);
+    const dotsWrap = document.getElementById(dotsId);
+    const pf = document.getElementById(pfId);
+    const pl = document.getElementById(plId);
+    const prevBtn = document.getElementById(prevId);
+    const nextBtn = document.getElementById(nextId);
+    const flipBtn = document.getElementById(flipId);
+
+    function buildCardSkeleton() {
+      cardEl.innerHTML =
+        '<div class="face front">' +
+          (showSetTag ? '<span class="tag-set" id="' + containerId + '-tag"></span>' : '') +
+          '<span class="tag-pos" id="' + containerId + '-pos"></span>' +
+          '<div class="word" id="' + containerId + '-word"></div>' +
+          '<div class="hint">нажми на карточку, чтобы увидеть перевод и пример</div>' +
+        '</div>' +
+        '<div class="face back">' +
+          '<div class="def-label">Значение</div>' +
+          '<div class="def" id="' + containerId + '-def"></div>' +
+          '<div class="example" id="' + containerId + '-ex"></div>' +
+        '</div>';
+    }
+
+    function buildDots() {
+      dotsWrap.innerHTML = '';
+      words.forEach((_, i) => {
+        const d = document.createElement('div');
+        d.className = 'dot-i';
+        d.addEventListener('click', () => { index = i; flipped = false; render(); });
+        dotsWrap.appendChild(d);
+      });
+    }
+
+    function render() {
+      const w = words[index];
+      document.getElementById(containerId + '-pos').textContent = w.pos;
+      document.getElementById(containerId + '-word').textContent = w.word;
+      document.getElementById(containerId + '-def').textContent = w.def;
+      document.getElementById(containerId + '-ex').textContent = w.example;
+      if (showSetTag) {
+        const tagEl = document.getElementById(containerId + '-tag');
+        tagEl.textContent = 'СЕТ ' + w.setId.slice(1);
+        tagEl.className = 'tag-set ' + w.setId;
+      }
+      cardEl.classList.toggle('flipped', flipped);
+      pf.style.width = ((index + 1) / words.length * 100) + '%';
+      pl.textContent = (index + 1) + ' / ' + words.length;
+      prevBtn.disabled = index === 0;
+      nextBtn.disabled = index === words.length - 1;
+      [...dotsWrap.children].forEach((d, i) => {
+        d.classList.toggle('active', i === index);
+        d.classList.toggle('done', i < index);
+      });
+    }
+
+    buildCardSkeleton();
+    cardEl.addEventListener('click', () => { flipped = !flipped; render(); });
+    flipBtn.addEventListener('click', (e) => { e.stopPropagation(); flipped = !flipped; render(); });
+    prevBtn.addEventListener('click', (e) => { e.stopPropagation(); if (index > 0) { index--; flipped = false; render(); } });
+    nextBtn.addEventListener('click', (e) => { e.stopPropagation(); if (index < words.length - 1) { index++; flipped = false; render(); } });
+
+    buildDots();
+    render();
+  }
+
+  makeDeck('card-set1', 'dots-set1', 'pf-set1', 'pl-set1', 'prev-set1', 'next-set1', 'flip-set1', set1Words, false);
+  makeDeck('card-set2', 'dots-set2', 'pf-set2', 'pl-set2', 'prev-set2', 'next-set2', 'flip-set2', set2Words, false);
+  makeDeck('card-set3', 'dots-set3', 'pf-set3', 'pl-set3', 'prev-set3', 'next-set3', 'flip-set3', set3Words, false);
+  makeDeck('card-all', 'dots-all', 'pf-all', 'pl-all', 'prev-all', 'next-all', 'flip-all', allWords, true);
+
+  // ---------- Roots rendering ----------
+  function renderRoots(containerId, roots) {
+    const wrap = document.getElementById(containerId);
+    wrap.innerHTML = roots.map(r => {
+      const exHtml = r.examples.map(e =>
+        '<div class="root-ex"><b>' + e.word + '</b> — ' + e.gloss + (e.src ? '<span class="src-tag">' + e.src + '</span>' : '') + '</div>'
+      ).join('');
+      return '<div class="root-card">' +
+        '<div class="root-top"><span class="root-name">' + r.root + '</span><span class="root-meaning">' + r.meaning + '</span></div>' +
+        '<div class="root-examples">' + exHtml + '</div>' +
+      '</div>';
+    }).join('');
+  }
+
+  renderRoots('roots-set1', roots1);
+  renderRoots('roots-set2', roots2);
+  renderRoots('roots-set3', roots3);
+  renderRoots('roots-all-1', roots1);
+  renderRoots('roots-all-2', roots2);
+  renderRoots('roots-all-3', roots3);
+
+  // ---------- Tabs ----------
+  const tabButtons = document.querySelectorAll('nav.tabs button');
+  const views = document.querySelectorAll('section.view');
+  tabButtons.forEach(btn => {
+    btn.addEventListener('click', () => {
+      tabButtons.forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      views.forEach(v => v.classList.remove('active'));
+      document.getElementById('view-' + btn.dataset.tab).classList.add('active');
+    });
+  });
+
+  // ---------- Quiz ----------
+  const quizScopeScreen = document.getElementById('quiz-scope-screen');
+  const quizRunScreen = document.getElementById('quiz-run-screen');
+  const quizResultScreen = document.getElementById('quiz-result-screen');
+  const scopeButtons = document.querySelectorAll('.scope-btn');
+
+  let quizQueue = [];
+  let quizIdx = 0;
+  let quizScore = 0;
+  let quizMisses = [];
+  let quizAnswered = false;
+
+  function shuffle(arr) {
+    const a = arr.slice();
+    for (let i = a.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [a[i], a[j]] = [a[j], a[i]];
+    }
+    return a;
+  }
+
+  function startQuiz(scope) {
+    let pool;
+    if (scope === 'set1') pool = set1Words;
+    else if (scope === 'set2') pool = set2Words;
+    else if (scope === 'set3') pool = set3Words;
+    else pool = set1Words.concat(set2Words, set3Words);
+    quizScope = scope;
+
+    quizQueue = shuffle(pool);
+    quizIdx = 0;
+    quizScore = 0;
+    quizMisses = [];
+    quizScoreOf = pool;
+
+    quizScopeScreen.style.display = 'none';
+    quizResultScreen.style.display = 'none';
+    quizRunScreen.style.display = 'block';
+    renderQuizQuestion();
+  }
+
+  let quizScoreOf = [];
+  let quizScope = 'all';
+
+  function renderQuizQuestion() {
+    quizAnswered = false;
+    const total = quizQueue.length;
+    const current = quizQueue[quizIdx];
+    document.getElementById('pf-quiz').style.width = ((quizIdx) / total * 100) + '%';
+    document.getElementById('pl-quiz').textContent = 'Вопрос ' + (quizIdx + 1) + ' / ' + total;
+    document.getElementById('quiz-word').textContent = current.word;
+    document.getElementById('quiz-score').textContent = 'Верно: ' + quizScore;
+    document.getElementById('quiz-next').disabled = true;
+
+    const distractPool = quizScoreOf.filter(w => w.word !== current.word);
+    const distractors = shuffle(distractPool).slice(0, 3).map(w => w.def);
+    const options = shuffle([current.def].concat(distractors));
+
+    const optWrap = document.getElementById('quiz-options');
+    optWrap.innerHTML = '';
+    options.forEach(optDef => {
+      const b = document.createElement('button');
+      b.className = 'q-opt';
+      b.textContent = optDef;
+      b.addEventListener('click', () => handleAnswer(optDef, current.def, b, optWrap));
+      optWrap.appendChild(b);
+    });
+  }
+
+  function handleAnswer(chosenDef, correctDef, btnEl, optWrap) {
+    if (quizAnswered) return;
+    quizAnswered = true;
+    const allBtns = optWrap.querySelectorAll('.q-opt');
+    allBtns.forEach(b => {
+      b.disabled = true;
+      if (b.textContent === correctDef) b.classList.add('correct');
+    });
+    if (chosenDef === correctDef) {
+      quizScore++;
+      document.getElementById('quiz-score').textContent = 'Верно: ' + quizScore;
+    } else {
+      btnEl.classList.add('wrong');
+      quizMisses.push(quizQueue[quizIdx]);
+    }
+    document.getElementById('quiz-next').disabled = false;
+  }
+
+  document.getElementById('quiz-next').addEventListener('click', () => {
+    quizIdx++;
+    if (quizIdx >= quizQueue.length) {
+      finishQuiz();
+    } else {
+      renderQuizQuestion();
+    }
+  });
+
+  function finishQuiz() {
+    quizRunScreen.style.display = 'none';
+    quizResultScreen.style.display = 'block';
+    const total = quizQueue.length;
+    document.getElementById('result-score').textContent = quizScore + '/' + total;
+    let msg = 'Отличный результат!';
+    const pct = quizScore / total;
+    if (pct < 0.5) msg = 'Стоит повторить карточки ещё раз.';
+    else if (pct < 0.8) msg = 'Неплохо — пара слов ещё требует повторения.';
+    document.getElementById('result-sub').textContent = msg;
+
+    const missWrap = document.getElementById('result-misses');
+    if (quizMisses.length === 0) {
+      missWrap.innerHTML = '<div class="miss-item">Все ответы верные — можно переходить к следующему сету.</div>';
+    } else {
+      missWrap.innerHTML = quizMisses.map(w =>
+        '<div class="miss-item"><b>' + w.word + '</b> — ' + w.def + '</div>'
+      ).join('');
+    }
+  }
+
+  scopeButtons.forEach(btn => {
+    btn.addEventListener('click', () => startQuiz(btn.dataset.scope));
+  });
+
+  document.getElementById('quiz-restart').addEventListener('click', () => {
+    startQuiz(quizScope);
+  });
+
+  document.getElementById('quiz-back').addEventListener('click', () => {
+    quizResultScreen.style.display = 'none';
+    quizRunScreen.style.display = 'none';
+    quizScopeScreen.style.display = 'block';
+  });
+</script>
+</body>
+</html>
