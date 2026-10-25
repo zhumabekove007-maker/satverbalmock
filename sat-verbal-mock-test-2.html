@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>SAT Verbal · Mock Test 2</title>
+<link rel="stylesheet" href="sat-mock.css">
+</head>
+<body>
+
+<!-- ============ INTRO ============ -->
+<div id="screen-intro" class="center">
+  <div class="topline"><a class="back-link" href="index.html">← Словарный тренажёр</a><span data-userbar></span></div>
+  <div class="mock-switch"><a href="sat-verbal-mock-test.html">Mock 1</a><a href="sat-verbal-mock-test-2.html" class="on">Mock 2</a></div>
+  <span class="kicker">SAT Verbal · Reading &amp; Writing</span>
+  <h1 style="font-size:30px; margin-bottom:6px;">Полный mock-тест №2</h1>
+  <p class="muted" style="margin:0 0 20px; font-size:14.5px;">Тест в формате Digital SAT (Reading &amp; Writing): 2 модуля по 33 вопроса. Оба модуля фиксированные — порядок и сложность не меняются по ходу теста.</p>
+
+  <div class="card">
+    <h3>Формат</h3>
+    <table class="struct">
+      <tr><th>Модуль</th><th>Вопросов</th><th>Время</th></tr>
+      <tr><td>Модуль 1</td><td>33</td><td id="t1">39 мин</td></tr>
+      <tr><td>Модуль 2</td><td>33</td><td id="t2">39 мин</td></tr>
+    </table>
+    <p class="muted" id="intro-order" style="margin-top:12px;"></p>
+  </div>
+
+  <div class="card">
+    <h3>Длительность модуля</h3>
+    <div class="radios">
+      <label><input type="radio" name="mins" value="39" checked> <b>39 минут</b> — пропорционально 33 вопросам (≈ 1 мин 11 с на вопрос, как на реальном SAT)</label>
+      <label><input type="radio" name="mins" value="32"> <b>32 минуты</b> — лимит реального модуля SAT (жёстче: вопросов больше)</label>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3>Как проходить</h3>
+    <ul>
+      <li>Сядь так, чтобы час тебя никто не отвлекал. Без словарей и подсказок — иначе оценка не будет честной.</li>
+      <li><b>⚑ Отметить</b> — пометить вопрос, чтобы вернуться к нему; <b>S̶</b> рядом с вариантом — вычеркнуть вариант.</li>
+      <li>Кнопка внизу с номером вопроса открывает карту модуля. После отправки модуля вернуться к нему нельзя.</li>
+      <li><b>Прогресс сохраняется автоматически.</b> Если страница обновится или закроется, при следующем открытии тест продолжится с того же места — но таймер за это время не останавливается.</li>
+      <li>Когда время выходит, модуль отправляется автоматически. Неотвеченные вопросы считаются ошибками — угадывай.</li>
+    </ul>
+  </div>
+
+  <div class="card">
+    <h3>Про оценку</h3>
+    <p class="muted" style="margin:0;">Реальная шкала College Board строится на закрытой статистической модели. Здесь оценка (200–800) — <b>приблизительная</b>: она считается по числу верных ответов из 66. Используй её как ориентир, а не как прогноз с точностью до 10 баллов. Слова из твоего тренажёра встречаются в тексте вопросов; в конце тест покажет, какие из них стоит повторить.</p>
+  </div>
+
+  <div class="card" id="history-card" hidden><h3>Твои попытки</h3><div id="history-body"></div></div>
+
+  <div style="text-align:center; margin-top:22px;"><button class="btn big" id="btn-start">Начать Модуль 1</button></div>
+</div>
+
+<!-- ============ TEST ============ -->
+<div id="screen-test" hidden>
+  <div class="tbar">
+    <div class="tl"><span id="mod-label">Reading and Writing · Module 1</span><small>SAT Mock Test</small></div>
+    <div class="timer-box">
+      <div class="timer" id="timer">30:00</div>
+      <button class="timer-toggle" id="timer-toggle">Скрыть</button>
+    </div>
+    <div class="tr"><button class="btn ghost" id="btn-to-review" style="padding:8px 14px; font-size:13px;">Проверка</button></div>
+  </div>
+  <div class="qwrap">
+    <section class="pane passage" id="pane-passage"></section>
+    <section class="pane" id="pane-q"></section>
+  </div>
+  <div class="fbar">
+    <div class="fl">SAT Reading &amp; Writing</div>
+    <button class="navbtn" id="btn-nav">Вопрос 1 из 27 ▴</button>
+    <div class="fr">
+      <button class="btn ghost" id="btn-back">Назад</button>
+      <button class="btn" id="btn-next">Далее</button>
+    </div>
+  </div>
+  <div class="pop" id="nav-pop" hidden>
+    <h3 id="pop-title">Модуль 1</h3>
+    <div class="legend"><span>▢ без ответа</span><span>■ с ответом</span><span style="color:var(--bad)">⚑ отмечен</span></div>
+    <div class="grid" id="pop-grid"></div>
+    <div style="display:flex; gap:8px; justify-content:space-between;">
+      <button class="btn ghost" id="pop-close">Закрыть</button>
+      <button class="btn" id="pop-review">К экрану проверки</button>
+    </div>
+  </div>
+</div>
+
+<!-- ============ REVIEW ============ -->
+<div id="screen-review" class="center" hidden>
+  <span class="kicker" id="rev-kicker">Модуль 1</span>
+  <h2 style="font-size:26px; margin-bottom:6px;">Проверь свои ответы</h2>
+  <p class="muted" style="font-size:14px; margin:0 0 6px;" id="rev-sub"></p>
+  <div class="card" style="margin-top:14px;">
+    <div class="legend"><span>▢ без ответа</span><span>■ с ответом</span><span style="color:var(--bad)">⚑ отмечен</span></div>
+    <div class="grid" id="rev-grid"></div>
+    <p class="muted" style="font-size:13px; margin:0;" id="rev-counts"></p>
+  </div>
+  <div id="confirm-box" class="card" hidden style="border-color:var(--bad);">
+    <p style="margin:0 0 12px;" id="confirm-text"></p>
+    <div style="display:flex; gap:10px;">
+      <button class="btn danger" id="confirm-yes">Да, отправить</button>
+      <button class="btn ghost" id="confirm-no">Отмена</button>
+    </div>
+  </div>
+  <div id="abort-box" class="card" hidden style="border-color:var(--bad);">
+    <p style="margin:0 0 12px;">Прервать тест? Все ответы этой попытки будут удалены, результат не сохранится.</p>
+    <div style="display:flex; gap:10px;">
+      <button class="btn danger" id="abort-yes">Да, прервать</button>
+      <button class="btn ghost" id="abort-no">Отмена</button>
+    </div>
+  </div>
+  <div style="display:flex; gap:10px; justify-content:center; margin-top:18px; flex-wrap:wrap;">
+    <button class="btn ghost" id="rev-back">← Вернуться к вопросам</button>
+    <button class="btn" id="rev-submit">Отправить модуль</button>
+  </div>
+  <p style="text-align:center; margin-top:18px;"><button class="ss-link" id="rev-abort" type="button">Прервать тест без сохранения</button></p>
+</div>
+
+<!-- ============ BREAK ============ -->
+<div id="screen-break" class="center" hidden>
+  <div style="text-align:center; padding-top:40px;">
+    <span class="kicker">Модуль 1 завершён</span>
+    <h2 style="font-size:28px; margin-bottom:10px;">Готов к Модулю 2?</h2>
+    <p class="muted" id="break-info" style="font-size:14.5px; max-width:480px; margin:0 auto 8px;"></p>
+    <p class="muted" style="font-size:14px; max-width:480px; margin:0 auto 26px;">Если нужно — сделай глоток воды. Таймер Модуля 2 стартует только после нажатия на кнопку. К Модулю 1 вернуться нельзя.</p>
+    <button class="btn big" id="btn-start2">Начать Модуль 2</button>
+  </div>
+</div>
+
+<!-- ============ RESULTS ============ -->
+<div id="screen-results" class="center" hidden>
+  <div class="topline"><span class="kicker" style="margin:0;">Результат · Reading &amp; Writing</span><span data-userbar></span></div>
+  <p class="viewing-note" id="viewing-note"></p>
+  <div class="scorebox">
+    <div class="score-big" id="res-score">—</div>
+    <div class="score-range" id="res-range"></div>
+    <div class="pill" id="res-route"></div>
+  </div>
+  <div class="stats">
+    <div class="stat"><b id="res-m1">—</b><span>Модуль 1</span></div>
+    <div class="stat"><b id="res-m2">—</b><span id="res-m2l">Модуль 2</span></div>
+    <div class="stat"><b id="res-total">—</b><span>Всего верных</span></div>
+  </div>
+  <div class="card"><h3>По разделам</h3><div id="res-domains"></div></div>
+  <div class="card" id="res-words-card"><h3>Слова с сайта: что повторить</h3><p class="muted" id="res-words-note" style="margin:0;"></p><div class="chips" id="res-words"></div></div>
+  <div class="card"><p class="muted" style="margin:0; font-size:13px;">Оценка ориентировочная: реальный SAT использует закрытую статистическую модель (IRT), а здесь учитывается только число верных ответов из 66. Разброс ±30 баллов — нормальный. Один mock-тест — это один замер; лучше пройти несколько тестов и смотреть на тренд.</p></div>
+
+  <h2 style="font-size:22px; margin-top:26px;">Разбор вопросов</h2>
+  <div class="filters" id="filters">
+    <button data-f="all" class="on">Все</button>
+    <button data-f="wrong">Ошибки и пропуски</button>
+    <button data-f="flag">Отмеченные</button>
+  </div>
+  <div id="review-list"></div>
+  <div style="display:flex; gap:10px; justify-content:center; margin-top:24px; flex-wrap:wrap;">
+    <button class="btn" id="btn-again">Пройти заново</button>
+    <button class="btn ghost" id="btn-history">К моим попыткам</button>
+    <a class="btn ghost" href="index.html" style="text-decoration:none; display:inline-block;">К словарному тренажёру</a>
+  </div>
+</div>
+
+<div class="toast" id="toast" hidden></div>
+
+<script src="sat-common.js"></script>
+<script src="sat-store.js"></script>
+<script src="mock2-data.js"></script>
+<script src="sat-mock-engine.js"></script>
+<script>
+startMockApp({ testId: 'mock2', modules: [MODULE1, MODULE2], expl: EXPL });
+</script>
+</body>
+</html>

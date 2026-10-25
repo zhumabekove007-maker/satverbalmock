@@ -1,0 +1,9 @@
+const DOM = { cs: 'Craft and Structure', ii: 'Information and Ideas', sec: 'Standard English Conventions', eoi: 'Expression of Ideas' };
+const ORDER = ['cs', 'ii', 'sec', 'eoi'];
+const Q_WIC = "Which choice completes the text with the most logical and precise word or phrase?";
+const Q_STD = "Which choice completes the text so that it conforms to the conventions of Standard English?";
+const Q_TR = "Which choice completes the text with the most logical transition?";
+const Q_INFC = "Which choice most logically completes the text?";
+const Q_SYN = "Which choice most effectively uses relevant information from the notes to accomplish this goal?";
+const NOTES_INTRO = "While researching a topic, a student has taken the following notes:";
+const SITE_WORDS = ['ambivalent','discern','candid','skeptical','meticulous','plausible','innate','ambiguous','corroborate','reticent','sanction','temper','novel','yield','compound','wry','candor','terse','subtle','austere','attached','surface','boulders','unexpected','obstacle','receive','trait','substantial','ponder','prey','boast','persist','conventional wisdom','acknowledge','challenge'];
