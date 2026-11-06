@@ -1,0 +1,1101 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>SAT Math · Mock Test 1</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css">
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js"></script>
+<style>
+  :root {
+    --navy: #0C2340; --accent: #7A3FE0; --accent2: #0B5FFF; --gold: #C9A227;
+    --bg: #F6F7F9; --card-bg: #ffffff; --ink: #1B2430; --muted: #5A6577; --line: #DCE1E9; --head: #0C2340;
+    --good: #0E9F6E; --bad: #C0392B; --sel-bg: rgba(122,63,224,0.10);
+    /* Bluebook-like test chrome */
+    --bb-blue: #324DC7; --bb-blue-bg: rgba(50,77,199,0.08); --bb-bar: #F0F0F0; --bb-ink: #1E1E1E; --bb-paper: #ffffff; --bb-head: #EBF0F7;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --bg: #0B1220; --card-bg: #16203A; --ink: #E7ECF5; --muted: #9AA7C0; --line: #2A3654; --head: #ffffff; --sel-bg: rgba(122,63,224,0.25);
+      --bb-blue: #6F86F0; --bb-blue-bg: rgba(111,134,240,0.16); --bb-bar: #1E2A47; --bb-ink: #E7ECF5; --bb-paper: #111A2E; --bb-head: #16203A;
+    }
+  }
+  :root[data-theme="dark"] {
+    --bg: #0B1220; --card-bg: #16203A; --ink: #E7ECF5; --muted: #9AA7C0; --line: #2A3654; --head: #ffffff; --sel-bg: rgba(122,63,224,0.25);
+    --bb-blue: #6F86F0; --bb-blue-bg: rgba(111,134,240,0.16); --bb-bar: #1E2A47; --bb-ink: #E7ECF5; --bb-paper: #111A2E; --bb-head: #16203A;
+  }
+  * { box-sizing: border-box; }
+  [hidden] { display: none !important; }
+  html, body { margin: 0; }
+  body { background: var(--bg); color: var(--ink); font-family: 'Helvetica Neue', Arial, sans-serif; min-height: 100vh; padding-top: env(safe-area-inset-top, 0px); }
+  h1, h2, h3 { font-family: Georgia, serif; font-weight: 400; color: var(--head); margin: 0; }
+  button { font-family: inherit; cursor: pointer; color: inherit; }
+  .btn { border: none; border-radius: 12px; padding: 13px 22px; font-size: 14.5px; font-weight: 700; background: var(--navy); color: #fff; transition: opacity .15s, transform .1s; text-decoration: none; display: inline-block; }
+  .btn:active { transform: scale(0.97); }
+  .btn.ghost { background: var(--card-bg); color: var(--head); border: 1px solid var(--line); }
+  .btn.danger { background: var(--bad); }
+  .btn.big { padding: 16px 30px; font-size: 16px; }
+
+  /* ---------- site-style screens ---------- */
+  .center { width: 100%; max-width: 760px; margin: 0 auto; padding: 28px 16px 64px; }
+  .kicker { display: inline-block; font-size: 11px; letter-spacing: 2px; text-transform: uppercase; color: var(--muted); border: 1px solid var(--line); border-radius: 20px; padding: 4px 12px; margin-bottom: 12px; }
+  .card { background: var(--card-bg); border: 1px solid var(--line); border-radius: 16px; padding: 20px 22px; margin-bottom: 14px; }
+  .card h3 { font-size: 17px; margin-bottom: 10px; }
+  .card p, .card li { font-size: 14.5px; line-height: 1.6; }
+  .card ul { margin: 6px 0 0; padding-left: 20px; }
+  .muted { color: var(--muted); }
+  table.struct { width: 100%; border-collapse: collapse; font-size: 14px; }
+  table.struct th, table.struct td { text-align: left; padding: 8px 6px; border-bottom: 1px solid var(--line); }
+  table.struct th { font-size: 11.5px; letter-spacing: 1px; text-transform: uppercase; color: var(--muted); }
+  .radios { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 8px; }
+  .radios label { flex: 1; min-width: 200px; border: 1px solid var(--line); border-radius: 12px; padding: 12px 14px; cursor: pointer; font-size: 14px; background: var(--card-bg); }
+  .radios input { margin-right: 8px; }
+  .back-link { font-size: 13px; color: var(--accent2); text-decoration: none; display: inline-block; margin-bottom: 16px; }
+  .field { width: 100%; max-width: 320px; padding: 11px 13px; border-radius: 10px; border: 1px solid var(--line); background: var(--card-bg); color: var(--ink); font-size: 15px; font-family: inherit; }
+
+  /* ---------- Bluebook test chrome ---------- */
+  #screen-test { position: fixed; inset: 0; display: flex; flex-direction: column; background: var(--bb-paper); color: var(--bb-ink); }
+  .bb-head { display: grid; grid-template-columns: 1fr auto 1fr; align-items: center; gap: 10px; padding: 10px 24px 8px; background: var(--bb-head); padding-top: calc(10px + env(safe-area-inset-top, 0px)); }
+  .bb-sec { font-size: 17px; font-weight: 700; }
+  .bb-dir { background: none; border: none; padding: 4px 0 0; font-size: 14px; font-weight: 700; display: inline-flex; align-items: center; gap: 4px; }
+  .bb-mid { text-align: center; }
+  .bb-timer { font-size: 19px; font-weight: 700; font-variant-numeric: tabular-nums; min-height: 24px; }
+  .bb-timer.low { color: var(--bad); }
+  .bb-hide { border: 1px solid currentColor; background: transparent; border-radius: 20px; font-size: 12px; font-weight: 700; padding: 2px 12px; margin-top: 3px; }
+  .bb-right { display: flex; justify-content: flex-end; gap: 6px; }
+  .bb-tool { background: none; border: none; display: flex; flex-direction: column; align-items: center; gap: 3px; font-size: 12px; font-weight: 600; padding: 4px 8px; border-radius: 8px; }
+  .bb-tool svg { width: 22px; height: 22px; }
+  .bb-tool.on { background: var(--bb-blue-bg); color: var(--bb-blue); }
+  .dashline { height: 3px; flex: none; background: repeating-linear-gradient(90deg, #2A2A2A 0 26px, transparent 26px 32px, #2C6DEB 32px 58px, transparent 58px 64px, #E1A200 64px 90px, transparent 90px 96px, #1F9D74 96px 122px, transparent 122px 128px); opacity: .85; }
+  .bb-main { flex: 1; overflow: hidden; position: relative; }
+  .bb-split { height: 100%; display: flex; }
+  .bb-lp { flex: 1; overflow-y: auto; padding: 28px 34px 40px; font-size: 15px; line-height: 1.55; }
+  .bb-divider { width: 6px; flex: none; background: var(--bb-bar); border-left: 1px solid var(--line); border-right: 1px solid var(--line); }
+  .bb-rp { flex: 1; overflow-y: auto; padding: 28px 34px 40px; }
+  .bb-split.single .bb-lp, .bb-split.single .bb-divider { display: none; }
+  .bb-split.single .bb-rp > .qinner { max-width: 720px; margin: 0 auto; }
+  .bb-foot { display: grid; grid-template-columns: 1fr auto 1fr; align-items: center; gap: 10px; padding: 10px 24px calc(10px + env(safe-area-inset-bottom, 0px)); background: var(--bb-head); }
+  .bb-name { font-size: 15px; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .bb-navbtn { background: #1E1E1E; color: #fff; border: none; border-radius: 8px; padding: 8px 16px; font-weight: 700; font-size: 14px; display: inline-flex; gap: 6px; align-items: center; }
+  .bb-fr { display: flex; justify-content: flex-end; gap: 10px; }
+  .bb-btn { background: var(--bb-blue); color: #fff; border: none; border-radius: 22px; padding: 10px 24px; font-weight: 700; font-size: 14.5px; }
+  .bb-btn:disabled { opacity: .35; cursor: default; }
+  @media (max-width: 760px) {
+    .bb-head { padding: 8px 12px; } .bb-sec { font-size: 14px; } .bb-tool span { display: none; }
+    .bb-split { flex-direction: column; overflow-y: auto; } .bb-lp, .bb-rp { flex: none; overflow: visible; padding: 18px 16px; }
+    .bb-divider { width: auto; height: 6px; border: none; border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); }
+    .bb-foot { padding: 8px 12px calc(8px + env(safe-area-inset-bottom, 0px)); } .bb-name { display: none; } .bb-foot { grid-template-columns: auto 1fr; } .bb-btn { padding: 9px 16px; }
+  }
+
+  /* question */
+  .qbar { display: flex; align-items: center; gap: 12px; background: var(--bb-bar); padding: 0 10px 0 0; margin-bottom: 18px; border-bottom: 2px dashed #9aa0a6; }
+  .qno { background: #1E1E1E; color: #fff; font-weight: 700; font-size: 16px; min-width: 34px; text-align: center; padding: 6px 8px; }
+  .mark { background: none; border: none; display: inline-flex; align-items: center; gap: 6px; font-size: 14px; font-weight: 600; padding: 6px 4px; }
+  .mark svg { width: 16px; height: 18px; }
+  .mark.on svg path { fill: #C13145; stroke: #C13145; }
+  .abc { margin-left: auto; border: 1.5px solid currentColor; border-radius: 6px; background: transparent; font-size: 11px; font-weight: 800; padding: 2px 6px; text-decoration: line-through; }
+  .abc.on { background: var(--bb-blue); border-color: var(--bb-blue); color: #fff; }
+  .qtext { font-size: 16px; line-height: 1.6; margin: 0 0 18px; }
+  .qtext p { margin: 0 0 10px; }
+  .ch { display: flex; align-items: center; gap: 10px; margin-bottom: 12px; }
+  .ch-main { flex: 1; display: flex; align-items: center; gap: 14px; text-align: left; border: 1.5px solid #6b6b6b; border-radius: 10px; background: var(--bb-paper); padding: 11px 14px; font-size: 16px; line-height: 1.4; min-height: 50px; }
+  .ch-l { flex: none; width: 28px; height: 28px; border-radius: 50%; border: 1.5px solid currentColor; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 14px; }
+  .ch.sel .ch-main { border: 3px solid var(--bb-blue); padding: 9.5px 12.5px; }
+  .ch.sel .ch-l { background: var(--bb-blue); border-color: var(--bb-blue); color: #fff; }
+  .ch.elim .ch-main { opacity: .5; position: relative; }
+  .ch.elim .ch-main::after { content: ''; position: absolute; left: -6px; right: -6px; top: 50%; border-top: 2px solid currentColor; }
+  .ch-x { flex: none; width: 34px; background: none; border: none; font-size: 12px; font-weight: 700; padding: 0; }
+  .ch-x .xl { display: inline-flex; width: 24px; height: 24px; border-radius: 50%; border: 1.5px solid currentColor; align-items: center; justify-content: center; position: relative; }
+  .ch-x .xl::after { content: ''; position: absolute; left: -4px; right: -4px; top: 50%; border-top: 1.5px solid currentColor; }
+  .ch-x .undo { text-decoration: underline; }
+  .ch table.mini { margin: 0; }
+  .spr-box { margin-top: 8px; }
+  .spr-input { width: 190px; font-size: 20px; padding: 8px 10px; border: 1.5px solid #6b6b6b; border-radius: 8px; background: var(--bb-paper); color: var(--bb-ink); font-family: inherit; letter-spacing: .5px; }
+  .spr-input:focus { outline: 2px solid var(--bb-blue); border-color: var(--bb-blue); }
+  .spr-prev { margin-top: 14px; font-size: 15px; font-weight: 700; }
+  .spr-prev span { font-weight: 400; margin-left: 6px; font-size: 17px; }
+  .lp-h { font-size: 17px; font-weight: 700; margin: 0 0 10px; }
+  .lp ul { padding-left: 20px; margin: 0 0 12px; } .lp li { margin-bottom: 7px; }
+  table.ex { border-collapse: collapse; width: 100%; font-size: 14px; margin-top: 10px; }
+  table.ex th, table.ex td { border: 1px solid var(--line); padding: 7px 9px; text-align: center; vertical-align: top; }
+  table.ex th { background: var(--bb-bar); }
+  table.mini { border-collapse: collapse; font-size: 15px; margin: 6px 0 14px; }
+  table.mini th, table.mini td { border: 1px solid currentColor; padding: 4px 14px; text-align: center; }
+  .figwrap { margin: 4px auto 18px; max-width: 420px; color: var(--bb-ink); }
+  .figwrap.sm { max-width: 340px; }
+  svg.fig { width: 100%; height: auto; display: block; }
+  svg.fig text { fill: currentColor; font-family: Georgia, 'Times New Roman', serif; font-size: 12.5px; }
+  svg.fig .it { font-style: italic; }
+  svg.fig .g { stroke: currentColor; stroke-opacity: .28; stroke-width: 1; }
+  svg.fig .a { stroke: currentColor; stroke-width: 1.4; fill: none; }
+  svg.fig .l { stroke: currentColor; stroke-width: 2; fill: none; }
+  svg.fig .b { fill: #b9bdc6; stroke: currentColor; stroke-width: 1; }
+  svg.fig .d { fill: currentColor; }
+  .note { font-size: 14px; text-align: center; margin: -8px 0 14px; }
+
+  /* popups */
+  .pop { position: fixed; left: 50%; transform: translateX(-50%); bottom: 74px; width: min(620px, calc(100vw - 24px)); background: var(--bb-paper); color: var(--bb-ink); border-radius: 14px; padding: 18px 20px; box-shadow: 0 10px 40px rgba(0,0,0,.3); z-index: 30; }
+  .pop h3 { font-family: inherit; font-weight: 700; font-size: 16px; text-align: center; color: inherit; margin-bottom: 10px; }
+  .legend { display: flex; gap: 18px; flex-wrap: wrap; justify-content: center; font-size: 13px; padding: 8px 0; border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); }
+  .legend span { display: inline-flex; align-items: center; gap: 6px; }
+  .lg-box { width: 14px; height: 14px; border: 1.5px dashed #6b6b6b; display: inline-block; }
+  .grid { display: grid; grid-template-columns: repeat(10, 1fr); gap: 10px 8px; margin: 18px 0; }
+  @media (max-width: 520px) { .grid { grid-template-columns: repeat(7, 1fr); } }
+  .gq { position: relative; aspect-ratio: 1; max-width: 42px; width: 100%; justify-self: center; border: 1.5px dashed #6b6b6b; background: var(--bb-paper); color: var(--bb-blue); font-weight: 700; font-size: 14px; border-radius: 2px; }
+  .gq.ans { border: 1.5px solid var(--bb-blue); background: var(--bb-blue); color: #fff; }
+  .gq.flag::after { content: ''; position: absolute; top: -7px; right: -6px; width: 10px; height: 13px; background: #C13145; clip-path: polygon(0 0,100% 0,100% 100%,50% 72%,0 100%); }
+  .gq.cur::before { content: ''; position: absolute; top: -15px; left: 50%; transform: translateX(-50%); width: 12px; height: 12px; background: #1E1E1E; clip-path: path('M6 0a6 6 0 0 1 6 6c0 4.5-6 10-6 10S0 10.5 0 6a6 6 0 0 1 6-6z'); }
+  .pop-actions { display: flex; justify-content: center; }
+  .outline-btn { border: 1.5px solid var(--bb-blue); color: var(--bb-blue); background: transparent; border-radius: 22px; padding: 9px 22px; font-weight: 700; font-size: 14px; }
+  .scrim { position: fixed; inset: 0; background: rgba(0,0,0,.25); z-index: 25; }
+  .dirpop { position: fixed; left: 24px; top: 80px; width: min(720px, calc(100vw - 32px)); max-height: calc(100vh - 170px); overflow-y: auto; background: var(--bb-paper); color: var(--bb-ink); border-radius: 12px; box-shadow: 0 10px 40px rgba(0,0,0,.3); z-index: 31; padding: 22px 26px; font-size: 15px; line-height: 1.55; }
+  .dirpop .close-row { display: flex; justify-content: flex-end; margin-top: 10px; }
+  .review-wrap { height: 100%; overflow-y: auto; padding: 30px 16px 40px; }
+  .review-wrap .inner { max-width: 760px; margin: 0 auto; text-align: center; }
+  .review-wrap h2 { font-family: inherit; font-weight: 700; color: inherit; font-size: 26px; margin-bottom: 10px; }
+  .rv-card { text-align: left; margin-top: 22px; border-radius: 12px; box-shadow: 0 2px 14px rgba(0,0,0,.14); padding: 18px 22px; background: var(--bb-paper); }
+  .rv-card .top { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px; border-bottom: 1px solid var(--line); padding-bottom: 12px; }
+  .rv-card .top b { font-size: 16px; }
+  .toast { position: fixed; top: 86px; left: 50%; transform: translateX(-50%); background: #1E1E1E; color: #fff; padding: 10px 18px; border-radius: 20px; font-size: 13.5px; z-index: 60; box-shadow: 0 8px 24px rgba(0,0,0,.25); }
+
+  /* floating tool panels (calculator / reference) */
+  .panel { position: fixed; z-index: 40; background: var(--bb-paper); color: var(--bb-ink); border-radius: 10px; box-shadow: 0 12px 40px rgba(0,0,0,.35); display: flex; flex-direction: column; overflow: hidden; border: 1px solid #555; }
+  .panel-h { display: flex; align-items: center; gap: 8px; background: #1E1E1E; color: #fff; padding: 6px 8px 6px 14px; cursor: move; user-select: none; touch-action: none; flex: none; }
+  .panel-h .t { font-weight: 700; font-size: 14px; margin-right: auto; }
+  .panel-h button { background: transparent; border: 1px solid rgba(255,255,255,.5); color: #fff; border-radius: 6px; font-size: 12px; font-weight: 700; padding: 4px 9px; }
+  .panel-h button.on { background: #fff; color: #1E1E1E; }
+  #calc-panel { left: 16px; top: 84px; width: 440px; height: 560px; resize: both; min-width: 300px; min-height: 340px; max-width: calc(100vw - 16px); max-height: calc(100vh - 100px); }
+  #calc-panel.expanded { width: min(900px, calc(100vw - 32px)); height: calc(100vh - 170px); }
+  #calc-body { flex: 1; position: relative; }
+  #calc-body > div { position: absolute; inset: 0; }
+  #calc-msg { padding: 20px; font-size: 14px; }
+  #ref-panel { right: 16px; top: 84px; width: 560px; max-width: calc(100vw - 16px); max-height: calc(100vh - 110px); }
+  #ref-body { overflow-y: auto; padding: 16px 18px; font-size: 14px; }
+  .ref-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(118px, 1fr)); gap: 14px 10px; text-align: center; }
+  .ref-grid svg { width: 100%; height: 70px; color: var(--bb-ink); }
+  .ref-grid svg text { fill: currentColor; font-family: Georgia, serif; font-style: italic; font-size: 11px; }
+  .ref-grid svg .s { stroke: currentColor; stroke-width: 1.3; fill: none; }
+  .ref-grid svg .dsh { stroke-dasharray: 3 3; }
+  .ref-f { font-size: 14px; margin-top: 2px; }
+  .ref-facts { margin-top: 16px; border-top: 1px solid var(--line); padding-top: 12px; line-height: 1.7; }
+  @media (max-width: 760px) { #calc-panel, #calc-panel.expanded { left: 6px !important; top: 60px !important; width: calc(100vw - 12px) !important; height: 62vh !important; resize: none; } #ref-panel { left: 6px !important; right: auto; top: 60px !important; width: calc(100vw - 12px); } }
+
+  /* ---------- results ---------- */
+  .scorebox { text-align: center; padding: 10px 0 18px; }
+  .score-big { font-family: Georgia, serif; font-size: 78px; color: var(--head); line-height: 1; }
+  .score-range { font-size: 14px; color: var(--muted); margin-top: 6px; }
+  .stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 14px; }
+  .stat { background: var(--card-bg); border: 1px solid var(--line); border-radius: 14px; padding: 14px; text-align: center; }
+  .stat b { display: block; font-family: Georgia, serif; font-size: 26px; color: var(--head); font-weight: 400; }
+  .stat span { font-size: 12px; color: var(--muted); }
+  .drow { margin: 12px 0; }
+  .drow .dl { display: flex; justify-content: space-between; font-size: 13.5px; margin-bottom: 5px; }
+  .bar { height: 8px; background: var(--line); border-radius: 8px; overflow: hidden; }
+  .bar > i { display: block; height: 100%; background: var(--accent); border-radius: 8px; }
+  .filters { display: flex; gap: 8px; flex-wrap: wrap; margin: 10px 0 14px; }
+  .filters button { border: 1px solid var(--line); background: var(--card-bg); color: var(--head); border-radius: 20px; padding: 7px 14px; font-size: 13px; font-weight: 700; }
+  .filters button.on { background: var(--navy); color: #fff; border-color: var(--navy); }
+  details.rv { background: var(--card-bg); border: 1px solid var(--line); border-radius: 14px; margin-bottom: 10px; }
+  details.rv summary { cursor: pointer; padding: 13px 16px; font-size: 13.5px; font-weight: 700; list-style: none; display: flex; gap: 10px; align-items: center; }
+  details.rv summary::-webkit-details-marker { display: none; }
+  .mk { flex: none; width: 24px; height: 24px; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: #fff; font-size: 13px; }
+  .mk.ok { background: var(--good); } .mk.no { background: var(--bad); } .mk.skip { background: var(--muted); }
+  .rvbody { padding: 0 16px 16px; font-size: 15px; line-height: 1.6; }
+  .rvbody .figwrap { color: var(--ink); }
+  .ro { border: 1.5px solid var(--line); border-radius: 10px; padding: 9px 12px; margin-bottom: 7px; font-size: 15px; display: flex; gap: 10px; align-items: center; }
+  .ro.correct { border-color: var(--good); background: rgba(14,159,110,.12); }
+  .ro.wrong { border-color: var(--bad); background: rgba(192,57,43,.12); }
+  .ro b { flex: none; }
+  .expl { margin-top: 10px; font-size: 14.5px; line-height: 1.6; border-left: 3px solid var(--gold); padding-left: 12px; }
+  .tagline { font-size: 11.5px; color: var(--muted); margin-bottom: 8px; }
+  .topline { display: flex; justify-content: space-between; align-items: center; gap: 10px 16px; flex-wrap: wrap; margin-bottom: 14px; }
+  .topline .back-link { margin-bottom: 0; }
+  .hist { width: 100%; border-collapse: collapse; font-size: 14px; }
+  .hist th { text-align: left; font-size: 12px; color: var(--muted); font-weight: 600; padding: 4px 6px 8px; }
+  .hist td { padding: 9px 6px; border-top: 1px solid var(--line); vertical-align: middle; }
+  .hist td.sc { font-family: Georgia, serif; font-size: 20px; color: var(--head); }
+  .hist td.go { text-align: right; }
+  .hist .best { font-size: 11px; font-weight: 700; color: var(--good); margin-left: 6px; }
+  .btn.small { padding: 7px 14px; font-size: 13px; }
+</style>
+</head>
+<body>
+
+<!-- ============ INTRO ============ -->
+<div id="screen-intro" class="center" hidden>
+  <div class="topline"><a class="back-link" href="index.html">← Словарный тренажёр</a><span data-userbar></span></div>
+  <span class="kicker">SAT Math · Practice Test 4</span>
+  <h1 style="font-size:30px; margin-bottom:6px;">Mock Math Test 1</h1>
+  <p class="muted" style="margin:0 0 20px; font-size:14.5px;">Раздел Math в формате Digital SAT: 2 модуля по 27 вопросов. Интерфейс повторяет Bluebook — встроенный калькулятор Desmos, справочный лист формул, отметки «Mark for Review», вычёркивание вариантов и экран проверки.</p>
+
+  <div class="card">
+    <h3>Формат</h3>
+    <table class="struct">
+      <tr><th>Модуль</th><th>Вопросов</th><th>Время</th></tr>
+      <tr><td>Модуль 1</td><td>27</td><td class="tmod">43 мин</td></tr>
+      <tr><td>Модуль 2</td><td>27</td><td class="tmod">43 мин</td></tr>
+    </table>
+    <p class="muted" style="margin-top:12px;">Около 75% вопросов — с вариантами ответа, остальные — <b>student-produced response</b>: ответ вписывается в поле (до 5 символов, с минусом до 6). Калькулятор разрешён на всех вопросах.</p>
+  </div>
+
+  <div class="card">
+    <h3>Длительность модуля</h3>
+    <div class="radios">
+      <label><input type="radio" name="mins" value="43" checked> <b>43 минуты</b> — лимит для 27 вопросов (как в бумажной/линейной версии SAT)</label>
+      <label><input type="radio" name="mins" value="35"> <b>35 минут</b> — лимит модуля Digital SAT (жёстче: здесь вопросов больше)</label>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3>Как проходить</h3>
+    <ul>
+      <li><b>Calculator</b> (вверху справа) — тот же Desmos, что на экзамене: вкладки Graphing и Scientific, окно можно двигать, растягивать и разворачивать.</li>
+      <li><b>Reference</b> — лист формул, как в Bluebook.</li>
+      <li><b>Mark for Review</b> — отметить вопрос; <b>ABC</b> — режим вычёркивания вариантов.</li>
+      <li>Кнопка «Question 1 of 27» внизу открывает карту модуля. После отправки модуля вернуться к нему нельзя.</li>
+      <li><b>Прогресс сохраняется автоматически</b> под твоим именем. Если страница обновится или закроется, тест продолжится с того же места — но таймер за это время не останавливается, как и на реальном экзамене.</li>
+    </ul>
+  </div>
+
+  <div class="card" id="intro-history-card" hidden><h3>Твои попытки</h3><div id="intro-history"></div></div>
+
+  <div style="text-align:center; margin-top:22px;"><button class="btn big" id="btn-start">Начать Модуль 1</button></div>
+</div>
+
+<!-- ============ TEST (Bluebook-style) ============ -->
+<div id="screen-test" hidden>
+  <header class="bb-head">
+    <div>
+      <div class="bb-sec" id="sec-title">Section 2, Module 1: Math</div>
+      <button class="bb-dir" id="btn-dir">Directions <svg width="12" height="12" viewBox="0 0 12 12"><path d="M2 4l4 4 4-4" fill="none" stroke="currentColor" stroke-width="2"/></svg></button>
+    </div>
+    <div class="bb-mid">
+      <div class="bb-timer" id="timer">43:00</div>
+      <button class="bb-hide" id="timer-toggle">Hide</button>
+    </div>
+    <div class="bb-right">
+      <button class="bb-tool" id="btn-calc" title="Calculator">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><rect x="4" y="2.5" width="16" height="19" rx="2"/><rect x="7" y="5.5" width="10" height="4" rx=".5"/><path d="M8 13h.01M12 13h.01M16 13h.01M8 16.5h.01M12 16.5h.01M16 16.5h.01" stroke-width="2.4" stroke-linecap="round"/></svg>
+        <span>Calculator</span></button>
+      <button class="bb-tool" id="btn-ref" title="Reference">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M7 3h7l4 4v14H7z"/><path d="M14 3v4h4"/><path d="M9.5 12.5h6M12.5 9.5v6M9.5 18h6" stroke-linecap="round"/></svg>
+        <span>Reference</span></button>
+    </div>
+  </header>
+  <div class="dashline"></div>
+
+  <main class="bb-main">
+    <div class="bb-split" id="split">
+      <section class="bb-lp lp" id="pane-left"></section>
+      <div class="bb-divider"></div>
+      <section class="bb-rp" id="pane-right"></section>
+    </div>
+    <div class="review-wrap" id="review-view" hidden>
+      <div class="inner">
+        <h2>Check Your Work</h2>
+        <p>On test day, you won't be able to move on to the next module until time expires.</p>
+        <p>For these practice questions, you can click <b>Next</b> when you're ready to move on.</p>
+        <div class="rv-card">
+          <div class="top"><b id="rv-title">Section 2, Module 1: Math Questions</b>
+            <div class="legend" style="border:none; padding:0;"><span><span class="lg-box"></span>Unanswered</span><span><svg width="11" height="14" viewBox="0 0 11 14"><path d="M0 0h11v14L5.5 10 0 14z" fill="#C13145"/></svg>For Review</span></div></div>
+          <div class="grid" id="rv-grid"></div>
+          <p class="muted" style="font-size:13px; margin:0;" id="rv-counts"></p>
+        </div>
+        <p style="margin-top:22px;"><button class="ss-link" id="rv-abort" type="button">Прервать тест без сохранения</button></p>
+      </div>
+    </div>
+  </main>
+
+  <div class="dashline"></div>
+  <footer class="bb-foot">
+    <div class="bb-name" id="foot-name">Student</div>
+    <button class="bb-navbtn" id="btn-nav">Question 1 of 27 <svg width="12" height="12" viewBox="0 0 12 12"><path d="M2 8l4-4 4 4" fill="none" stroke="currentColor" stroke-width="2"/></svg></button>
+    <div class="bb-fr">
+      <button class="bb-btn" id="btn-back">Back</button>
+      <button class="bb-btn" id="btn-next">Next</button>
+    </div>
+  </footer>
+
+  <div class="pop" id="nav-pop" hidden>
+    <h3 id="pop-title">Section 2, Module 1: Math Questions</h3>
+    <div class="legend">
+      <span><svg width="12" height="16" viewBox="0 0 12 16"><path d="M6 0a6 6 0 0 1 6 6c0 4.5-6 10-6 10S0 10.5 0 6a6 6 0 0 1 6-6z" fill="currentColor"/></svg>Current</span>
+      <span><span class="lg-box"></span>Unanswered</span>
+      <span><svg width="11" height="14" viewBox="0 0 11 14"><path d="M0 0h11v14L5.5 10 0 14z" fill="#C13145"/></svg>For Review</span>
+    </div>
+    <div class="grid" id="pop-grid"></div>
+    <div class="pop-actions"><button class="outline-btn" id="pop-review">Go to Review Page</button></div>
+  </div>
+
+  <div class="scrim" id="dir-scrim" hidden></div>
+  <div class="dirpop" id="dir-pop" hidden>
+    <p style="margin-top:0;">The questions in this section address a number of important math skills.</p>
+    <p>Use of a calculator is permitted for all questions. A reference sheet, calculator, and these directions can be accessed throughout the test.</p>
+    <p><b>Unless otherwise indicated:</b></p>
+    <ul>
+      <li>All variables and expressions represent real numbers.</li>
+      <li>Figures provided are drawn to scale.</li>
+      <li>All figures lie in a plane.</li>
+      <li>The domain of a given function \(f\) is the set of all real numbers \(x\) for which \(f(x)\) is a real number.</li>
+    </ul>
+    <p>For <b>multiple-choice questions</b>, solve each problem and choose the correct answer from the choices provided. Each multiple-choice question has a single correct answer.</p>
+    <div id="dir-spr"></div>
+    <div class="close-row"><button class="bb-btn" id="dir-close">Close</button></div>
+  </div>
+</div>
+
+<!-- floating calculator -->
+<div class="panel" id="calc-panel" hidden>
+  <div class="panel-h" id="calc-drag">
+    <span class="t">Calculator</span>
+    <button id="calc-tab-g" class="on">Graphing</button>
+    <button id="calc-tab-s">Scientific</button>
+    <button id="calc-expand" title="Expand">⤢</button>
+    <button id="calc-close" title="Close">✕</button>
+  </div>
+  <div id="calc-body"><div id="calc-g"></div><div id="calc-s" hidden></div><div id="calc-msg" hidden></div></div>
+</div>
+
+<!-- floating reference sheet -->
+<div class="panel" id="ref-panel" hidden>
+  <div class="panel-h" id="ref-drag"><span class="t">Reference Sheet</span><button id="ref-close">✕</button></div>
+  <div id="ref-body"></div>
+</div>
+
+<!-- ============ BREAK between modules ============ -->
+<div id="screen-break" class="center" hidden>
+  <div style="text-align:center; padding-top:40px;">
+    <span class="kicker">Модуль 1 завершён</span>
+    <h2 style="font-size:28px; margin-bottom:10px;">Готов к Модулю 2?</h2>
+    <p class="muted" id="break-info" style="font-size:14.5px; max-width:480px; margin:0 auto 8px;"></p>
+    <p class="muted" style="font-size:14px; max-width:480px; margin:0 auto 26px;">На реальном SAT Модуль 2 начинается сразу после Модуля 1. Таймер стартует после нажатия на кнопку. К Модулю 1 вернуться нельзя.</p>
+    <button class="btn big" id="btn-start2">Начать Модуль 2</button>
+  </div>
+</div>
+
+<!-- ============ RESULTS ============ -->
+<div id="screen-results" class="center" hidden>
+  <div class="topline"><span class="kicker" style="margin:0;">Результат · Math · Mock Test 1</span><span data-userbar></span></div>
+  <div class="scorebox">
+    <div class="score-big" id="res-score">—</div>
+    <div class="score-range" id="res-range"></div>
+    <div class="score-range" id="res-date" style="margin-top:2px;"></div>
+  </div>
+  <div class="stats">
+    <div class="stat"><b id="res-m1">—</b><span>Модуль 1</span></div>
+    <div class="stat"><b id="res-m2">—</b><span>Модуль 2</span></div>
+    <div class="stat"><b id="res-total">—</b><span>Всего верных</span></div>
+  </div>
+  <div class="card"><h3>По разделам</h3><div id="res-domains"></div></div>
+  <div class="card" id="res-history-card" hidden><h3>Твои попытки</h3><div id="res-history"></div></div>
+  <div class="card"><p class="muted" style="margin:0; font-size:13px;">Оценка ориентировочная: реальный SAT использует закрытую статистическую модель (IRT), а здесь учитывается только число верных ответов из 54. Разброс ±30 баллов — нормальный. Результат сохранён под твоим именем — он останется после перезагрузки страницы.</p></div>
+
+  <h2 style="font-size:22px; margin-top:26px;">Разбор вопросов</h2>
+  <div class="filters" id="filters">
+    <button data-f="wrong" class="on">Ошибки и пропуски</button>
+    <button data-f="all">Все</button>
+    <button data-f="flag">Отмеченные</button>
+  </div>
+  <div id="review-list"></div>
+  <div style="display:flex; gap:10px; justify-content:center; margin-top:24px; flex-wrap:wrap;">
+    <button class="btn" id="btn-retake">Пройти заново</button>
+    <button class="btn ghost" id="btn-history">К моим попыткам</button>
+    <a class="btn ghost" href="index.html">К словарному тренажёру</a>
+  </div>
+</div>
+
+<div class="toast" id="toast" hidden></div>
+
+<script src="sat-store.js"></script>
+<script>
+/* =====================================================================
+   CONFIG
+   ===================================================================== */
+// Desmos API key. This is Desmos's public demo key — fine for testing.
+// For a public website, request your own free key at https://www.desmos.com/api and paste it here.
+const DESMOS_KEY = 'dcb31709b452b1cf9dc26972add0fda6';
+const DESMOS_SRC = 'https://www.desmos.com/api/v1.10/calculator.js?apiKey=' + DESMOS_KEY;
+const TEST_ID = 'math1';                  // key for SatStore (progress + attempts per student)
+const NQ = 27;
+const DOM = { alg: 'Algebra', adv: 'Advanced Math', psda: 'Problem-Solving and Data Analysis', geo: 'Geometry and Trigonometry' };
+const ORDER = ['alg', 'adv', 'psda', 'geo'];
+
+/* =====================================================================
+   FIGURES (inline SVG, redrawn from the test booklet)
+   ===================================================================== */
+function svg(w, h, label, inner) {
+  return '<svg class="fig" viewBox="0 0 ' + w + ' ' + h + '" role="img" aria-label="' + label + '" xmlns="http://www.w3.org/2000/svg">' + inner + '</svg>';
+}
+function arrowHead(x, y, dir) { // dir: 'r' | 'u'
+  return dir === 'r' ? '<path d="M' + x + ' ' + y + ' l-7 -3.5 v7 z" class="d"/>' : '<path d="M' + x + ' ' + y + ' l-3.5 7 h7 z" class="d"/>';
+}
+/* coordinate plane */
+function cgrid(o) {
+  const W = o.w || 360, H = o.h || 360, P = 26;
+  const iw = W - 2 * P, ih = H - 2 * P;
+  const X = x => P + (x - o.xmin) / (o.xmax - o.xmin) * iw;
+  const Y = y => P + (o.ymax - y) / (o.ymax - o.ymin) * ih;
+  let s = '';
+  for (let x = o.xmin; x <= o.xmax; x += o.gx) s += '<line class="g" x1="' + X(x) + '" x2="' + X(x) + '" y1="' + Y(o.ymin) + '" y2="' + Y(o.ymax) + '"/>';
+  for (let y = o.ymin; y <= o.ymax; y += o.gy) s += '<line class="g" y1="' + Y(y) + '" y2="' + Y(y) + '" x1="' + X(o.xmin) + '" x2="' + X(o.xmax) + '"/>';
+  const ax = X(0), ay = Y(0);
+  s += '<line class="a" x1="' + X(o.xmin) + '" x2="' + (X(o.xmax) + 12) + '" y1="' + ay + '" y2="' + ay + '"/>' + arrowHead(X(o.xmax) + 14, ay, 'r');
+  s += '<line class="a" y1="' + Y(o.ymin) + '" y2="' + (Y(o.ymax) - 12) + '" x1="' + ax + '" x2="' + ax + '"/>' + arrowHead(ax, Y(o.ymax) - 14, 'u');
+  s += '<text class="it" x="' + (X(o.xmax) + 10) + '" y="' + (ay + 16) + '">x</text><text class="it" x="' + (ax + 6) + '" y="' + (Y(o.ymax) - 8) + '">y</text>';
+  for (let x = o.xmin; x <= o.xmax; x += o.lx) if (x !== 0) s += '<text x="' + X(x) + '" y="' + (ay + 14) + '" text-anchor="middle" style="font-size:10.5px">' + (x < 0 ? '−' + (-x) : x) + '</text>';
+  for (let y = o.ymin; y <= o.ymax; y += o.ly) if (y !== 0) s += '<text x="' + (ax - 4) + '" y="' + (Y(y) + 4) + '" text-anchor="end" style="font-size:10.5px">' + (y < 0 ? '−' + (-y) : y) + '</text>';
+  s += '<text class="it" x="' + (ax - 5) + '" y="' + (ay + 14) + '" text-anchor="end">O</text>';
+  (o.lines || []).forEach(l => { s += '<line class="l" x1="' + X(l[0]) + '" y1="' + Y(l[1]) + '" x2="' + X(l[2]) + '" y2="' + Y(l[3]) + '"/>'; });
+  (o.pts || []).forEach(p => { s += '<circle class="d" cx="' + X(p[0]) + '" cy="' + Y(p[1]) + '" r="3.6"/>'; });
+  return svg(W + 16, H, o.label || 'Graph in the xy-plane', s);
+}
+const FIG = {
+  m1q1() {
+    const W = 380, H = 300, L = 58, R = 14, T = 14, B = 48, iw = W - L - R, ih = H - T - B, vals = [29, 31, 39, 43, 48];
+    const Y = v => T + ih - v / 50 * ih, step = iw / 5;
+    let s = '';
+    for (let v = 0; v <= 50; v += 5) s += '<line class="g" x1="' + L + '" x2="' + (L + iw) + '" y1="' + Y(v) + '" y2="' + Y(v) + '"/><text x="' + (L - 7) + '" y="' + (Y(v) + 4) + '" text-anchor="end">' + v + '</text>';
+    vals.forEach((v, i) => { const bw = step * .62, x = L + step * i + (step - bw) / 2; s += '<rect class="b" x="' + x + '" y="' + Y(v) + '" width="' + bw + '" height="' + (T + ih - Y(v)) + '"/><text x="' + (x + bw / 2) + '" y="' + (T + ih + 16) + '" text-anchor="middle">' + (i + 1) + '</text>'; });
+    s += '<line class="a" x1="' + L + '" x2="' + L + '" y1="' + T + '" y2="' + (T + ih) + '"/><line class="a" x1="' + L + '" x2="' + (L + iw) + '" y1="' + (T + ih) + '" y2="' + (T + ih) + '"/>';
+    s += '<text x="' + (L + iw / 2) + '" y="' + (H - 8) + '" text-anchor="middle">Activity</text><text transform="translate(16 ' + (T + ih / 2) + ') rotate(-90)" text-anchor="middle">Number of students</text>';
+    return '<div class="figwrap">' + svg(W, H, 'Bar graph: number of students per activity', s) + '</div>';
+  },
+  m1q9() {
+    const s = '<path class="l" d="M20 150 L210 150 L210 30 Z"/><path class="a" d="M198 150 v-12 h12"/>' +
+      '<path class="l" d="M250 150 L370 150 L370 74 Z"/><path class="a" d="M360 150 v-10 h10"/>' +
+      '<text class="it" x="8" y="162">P</text><text class="it" x="206" y="168">R</text><text class="it" x="204" y="22">Q</text>' +
+      '<text class="it" x="238" y="162">S</text><text class="it" x="368" y="168">U</text><text class="it" x="366" y="66">T</text>';
+    return '<div class="figwrap">' + svg(390, 175, 'Right triangles PQR and STU', s) + '</div><p class="note">Note: Figures not drawn to scale.</p>';
+  },
+  m1q10() { return '<div class="figwrap sm">' + cgrid({ xmin: 0, xmax: 10, ymin: 0, ymax: 10, gx: 1, gy: 1, lx: 1, ly: 1, w: 320, h: 320, pts: [[0, 10], [1, 9], [2, 8], [3, 5], [4.5, 5], [5.3, 3], [6.6, 3], [7.2, 3], [8.6, 1], [9.5, 2]], label: 'Scatterplot of x and y' }) + '</div>'; },
+  m1q12() { return '<div class="figwrap sm">' + cgrid({ xmin: -10, xmax: 10, ymin: -16, ymax: 16, gx: 2, gy: 2, lx: 2, ly: 2, w: 330, h: 380, lines: [[-10, 2, 8, -16]], label: 'Line in the xy-plane' }) + '</div>'; },
+  m2q1() {
+    const W = 420, H = 300, L = 62, R = 14, T = 14, B = 62, iw = W - L - R, ih = H - T - B;
+    const vals = [40, 40, 98, 100, 50, 158, 50, 98, 95, 52, 113], n = vals.length;
+    const Y = v => T + ih - v / 200 * ih, X = i => L + iw * i / (n - 1);
+    let s = '';
+    for (let v = 0; v <= 200; v += 50) s += '<line class="g" x1="' + L + '" x2="' + (L + iw) + '" y1="' + Y(v) + '" y2="' + Y(v) + '"/><text x="' + (L - 7) + '" y="' + (Y(v) + 4) + '" text-anchor="end">' + v + '</text>';
+    for (let i = 0; i < n; i++) s += '<line class="g" x1="' + X(i) + '" x2="' + X(i) + '" y1="' + T + '" y2="' + (T + ih) + '"/><text transform="translate(' + (X(i) + 4) + ' ' + (T + ih + 12) + ') rotate(-45)" text-anchor="end" style="font-size:11px">' + (1989 + i) + '</text>';
+    s += '<line class="a" x1="' + L + '" x2="' + L + '" y1="' + T + '" y2="' + (T + ih) + '"/><line class="a" x1="' + L + '" x2="' + (L + iw) + '" y1="' + (T + ih) + '" y2="' + (T + ih) + '"/>';
+    s += '<polyline class="l" points="' + vals.map((v, i) => X(i) + ',' + Y(v)).join(' ') + '"/>';
+    s += '<text x="' + (L + iw / 2) + '" y="' + (H - 4) + '" text-anchor="middle">Year</text><text transform="translate(18 ' + (T + ih / 2) + ') rotate(-90)" text-anchor="middle">Estimated number</text><text transform="translate(32 ' + (T + ih / 2) + ') rotate(-90)" text-anchor="middle">of chipmunks</text>';
+    return '<div class="figwrap">' + svg(W, H, 'Line graph of estimated chipmunks 1989 to 1999', s) + '</div>';
+  },
+  m2q16() {
+    const s = '<line class="l" x1="30" x2="370" y1="80" y2="80"/><line class="l" x1="30" x2="370" y1="185" y2="185"/>' +
+      '<line class="l" x1="92" y1="12" x2="330" y2="262"/>' +
+      '<text class="it" x="84" y="12">t</text><text class="it" x="378" y="84">m</text><text class="it" x="378" y="189">n</text>' +
+      '<text x="162" y="74">x°</text><text x="128" y="98">y°</text><text x="226" y="178">z°</text>';
+    return '<div class="figwrap">' + svg(395, 270, 'Parallel lines m and n cut by transversal t', s) + '</div><p class="note">Note: Figure not drawn to scale.</p>';
+  },
+  m2q22() { return '<div class="figwrap sm">' + cgrid({ xmin: -10, xmax: 10, ymin: -10, ymax: 10, gx: 1, gy: 1, lx: 2, ly: 2, w: 340, h: 340, lines: [[-10, 6.5, 10, 1.5]], pts: [[-4, 5], [8, 2]], label: 'Graph of a system of linear equations' }) + '</div>'; },
+  m2q24() {
+    const counts = [5, 4, 3, 2, 1]; let s = '<text x="160" y="16" text-anchor="middle">Data Set A</text><line class="a" x1="40" x2="280" y1="130" y2="130"/>';
+    counts.forEach((c, i) => { const x = 60 + i * 50; s += '<line class="a" x1="' + x + '" x2="' + x + '" y1="125" y2="135"/><text x="' + x + '" y="150" text-anchor="middle">' + (22 + i) + '</text>'; for (let k = 0; k < c; k++) s += '<circle class="d" cx="' + x + '" cy="' + (116 - k * 18) + '" r="5"/>'; });
+    return '<div class="figwrap sm">' + svg(320, 160, 'Dot plot of data set A', s) + '</div>';
+  }
+};
+
+/* =====================================================================
+   QUESTIONS  ·  d: domain · t: mc | spr · q: stem (HTML + KaTeX)
+   o: options · a: correct index · acc: accepted SPR answers · e: explanation
+   ===================================================================== */
+const MODULE1 = [
+ { d:'psda', t:'mc', fig:'m1q1', a:1, q:String.raw`A group of students voted on five after-school activities. The bar graph shows the number of students who voted for each of the five activities. How many students chose activity 3?`,
+   o:['25','39','48','50'], e:String.raw`The bar for activity 3 ends at 39 on the vertical axis, so 39 students chose it. 48 is activity 5; 50 is just the top of the axis.` },
+ { d:'psda', t:'mc', a:0, q:String.raw`What percentage of 300 is 75?`, o:['25%','50%','75%','225%'],
+   e:String.raw`\(\frac{75}{300}=0.25=25\%\).` },
+ { d:'adv', t:'mc', a:1, q:String.raw`\[\frac{x^2}{25}=36\] What is a solution to the given equation?`, o:['6','30','450','900'],
+   e:String.raw`Multiply by 25: \(x^2=900\), so \(x=\pm30\). Only 30 is listed. (900 is \(x^2\), not \(x\).)` },
+ { d:'alg', t:'mc', a:3, q:String.raw`3 more than 8 times a number \(x\) is equal to 83. Which equation represents this situation?`,
+   o:[String.raw`\((3)(8)x=83\)`,String.raw`\(8x=83+3\)`,String.raw`\(3x+8=83\)`,String.raw`\(8x+3=83\)`],
+   e:String.raw`"8 times a number" is \(8x\); "3 more than" that is \(8x+3\); it equals 83.` },
+ { d:'alg', t:'mc', a:0, q:String.raw`Hana deposited a fixed amount into her bank account each month. The function \(f(t)=100+25t\) gives the amount, in dollars, in Hana’s bank account after \(t\) monthly deposits. What is the best interpretation of 25 in this context?`,
+   o:['With each monthly deposit, the amount in Hana’s bank account increased by $25.','Before Hana made any monthly deposits, the amount in her bank account was $25.','After 1 monthly deposit, the amount in Hana’s bank account was $25.','Hana made a total of 25 monthly deposits.'],
+   e:String.raw`25 is the coefficient of \(t\): each additional deposit adds $25. The starting amount (\(t=0\)) is $100, and after 1 deposit the account has $125.` },
+ { d:'psda', t:'spr', acc:['9'], q:String.raw`A customer spent $27 to purchase oranges at $3 per pound. How many pounds of oranges did the customer purchase?`,
+   e:String.raw`\(27\div 3=9\) pounds.` },
+ { d:'alg', t:'spr', acc:['10'], q:String.raw`Nasir bought 9 storage bins that were each the same price. He used a coupon for $63 off the entire purchase. The cost for the entire purchase after using the coupon was $27. What was the original price, in dollars, for 1 storage bin?`,
+   e:String.raw`\(9p-63=27\Rightarrow 9p=90\Rightarrow p=10\).` },
+ { d:'alg', t:'mc', a:0, q:String.raw`<table class="mini"><tr><th>\(x\)</th><th>\(f(x)\)</th></tr><tr><td>0</td><td>29</td></tr><tr><td>1</td><td>32</td></tr><tr><td>2</td><td>35</td></tr></table>For the linear function \(f\), the table shows three values of \(x\) and their corresponding values of \(f(x)\). Which equation defines \(f(x)\)?`,
+   o:[String.raw`\(f(x)=3x+29\)`,String.raw`\(f(x)=29x+32\)`,String.raw`\(f(x)=35x+29\)`,String.raw`\(f(x)=32x+35\)`],
+   e:String.raw`Each time \(x\) increases by 1, \(f(x)\) increases by 3, so the slope is 3. \(f(0)=29\) is the \(y\)-intercept: \(f(x)=3x+29\).` },
+ { d:'geo', t:'mc', fig:'m1q9', a:1, q:String.raw`Right triangles \(PQR\) and \(STU\) are similar, where \(P\) corresponds to \(S\). If the measure of angle \(Q\) is \(18^\circ\), what is the measure of angle \(S\)?`,
+   o:['\\(18^\\circ\\)','\\(72^\\circ\\)','\\(82^\\circ\\)','\\(162^\\circ\\)'],
+   e:String.raw`Angle \(R\) is \(90^\circ\), so angle \(P=180^\circ-90^\circ-18^\circ=72^\circ\). Corresponding angles of similar triangles are equal, so angle \(S=72^\circ\).` },
+ { d:'psda', t:'mc', fig:'m1q10', a:3, q:String.raw`The scatterplot shows the relationship between two variables, \(x\) and \(y\). Which of the following equations is the most appropriate linear model for the data shown?`,
+   o:[String.raw`\(y=0.9+9.4x\)`,String.raw`\(y=0.9-9.4x\)`,String.raw`\(y=9.4+0.9x\)`,String.raw`\(y=9.4-0.9x\)`],
+   e:String.raw`The points fall from about 10 near \(x=0\) to about 1–2 near \(x=10\): a negative slope of roughly \(-0.9\) and a \(y\)-intercept near 9.4. A slope of \(-9.4\) would drop far too fast.` },
+ { d:'alg', t:'mc', a:0, q:String.raw`\[2.5b+5r=80\] The given equation describes the relationship between the number of birds, \(b\), and the number of reptiles, \(r\), that can be cared for at a pet care business on a given day. If the business cares for 16 reptiles on a given day, how many birds can it care for on this day?`,
+   o:['0','5','40','80'], e:String.raw`\(2.5b+5(16)=80\Rightarrow 2.5b+80=80\Rightarrow b=0\).` },
+ { d:'alg', t:'mc', fig:'m1q12', a:2, q:String.raw`What is an equation of the graph shown?`,
+   o:[String.raw`\(y=-2x-8\)`,String.raw`\(y=x-8\)`,String.raw`\(y=-x-8\)`,String.raw`\(y=2x-8\)`],
+   e:String.raw`The line crosses the \(y\)-axis at \(-8\) and the \(x\)-axis at \(-8\). Slope \(=\frac{0-(-8)}{-8-0}=-1\), so \(y=-x-8\).` },
+ { d:'alg', t:'spr', acc:['1/5','.2'], q:String.raw`If \(\dfrac{x}{8}=5\), what is the value of \(\dfrac{8}{x}\)?`,
+   e:String.raw`\(\frac{8}{x}\) is the reciprocal of \(\frac{x}{8}\), so it equals \(\frac15=0.2\) (or: \(x=40\), \(\frac{8}{40}=\frac15\)).` },
+ { d:'alg', t:'spr', acc:['80'], q:String.raw`\[\begin{aligned}24x+y&=48\\ 6x+y&=72\end{aligned}\] The solution to the given system of equations is \((x,y)\). What is the value of \(y\)?`,
+   e:String.raw`Subtract the equations: \(18x=-24\), \(x=-\frac43\). Then \(y=72-6\left(-\frac43\right)=72+8=80\).` },
+ { d:'alg', t:'mc', a:3, q:String.raw`Line \(t\) in the \(xy\)-plane has a slope of \(-\frac13\) and passes through the point \((9,10)\). Which equation defines line \(t\)?`,
+   o:[String.raw`\(y=13x-\frac13\)`,String.raw`\(y=9x+10\)`,String.raw`\(y=-\frac{x}{3}+10\)`,String.raw`\(y=-\frac{x}{3}+13\)`],
+   e:String.raw`\(y-10=-\frac13(x-9)\Rightarrow y=-\frac{x}{3}+3+10=-\frac{x}{3}+13\). Check: at \(x=9\), \(y=-3+13=10\).` },
+ { d:'adv', t:'mc', a:1, q:String.raw`The function \(f(x)=206(1.034)^x\) models the value, in dollars, of a certain bank account by the end of each year from 1957 through 1972, where \(x\) is the number of years after 1957. Which of the following is the best interpretation of “\(f(5)\) is approximately equal to 243” in this context?`,
+   o:['The value of the bank account is estimated to be approximately 5 dollars greater in 1962 than in 1957.','The value of the bank account is estimated to be approximately 243 dollars in 1962.','The value, in dollars, of the bank account is estimated to be approximately 5 times greater in 1962 than in 1957.','The value of the bank account is estimated to increase by approximately 243 dollars every 5 years between 1957 and 1972.'],
+   e:String.raw`\(x=5\) means 5 years after 1957, i.e. 1962, and \(f(5)\) is the account value then: about $243.` },
+ { d:'psda', t:'mc', a:1, q:String.raw`For a certain rectangular region, the ratio of its length to its width is 35 to 10. If the width of the rectangular region increases by 7 units, how must the length change to maintain this ratio?`,
+   o:['It must decrease by 24.5 units.','It must increase by 24.5 units.','It must decrease by 7 units.','It must increase by 7 units.'],
+   e:String.raw`Length \(=3.5\times\) width. If the width grows by 7, the length must grow by \(3.5\cdot7=24.5\).` },
+ { d:'adv', t:'mc', a:0, q:String.raw`Square P has a side length of \(x\) inches. Square Q has a perimeter that is 176 inches greater than the perimeter of square P. The function \(f\) gives the area of square Q, in square inches. Which of the following defines \(f\)?`,
+   o:[String.raw`\(f(x)=(x+44)^2\)`,String.raw`\(f(x)=(x+176)^2\)`,String.raw`\(f(x)=(176x+44)^2\)`,String.raw`\(f(x)=(176x+176)^2\)`],
+   e:String.raw`Perimeter of Q is \(4x+176\), so its side is \(\frac{4x+176}{4}=x+44\) and its area is \((x+44)^2\).` },
+ { d:'adv', t:'mc', a:2, q:String.raw`\[\frac{14x}{7y}=2\sqrt{w+19}\] The given equation relates the distinct positive real numbers \(w\), \(x\), and \(y\). Which equation correctly expresses \(w\) in terms of \(x\) and \(y\)?`,
+   o:[String.raw`\(w=\sqrt{\dfrac{x}{y}}-19\)`,String.raw`\(w=\sqrt{\dfrac{28x}{14y}}-19\)`,String.raw`\(w=\left(\dfrac{x}{y}\right)^2-19\)`,String.raw`\(w=\left(\dfrac{28x}{14y}\right)^2-19\)`],
+   e:String.raw`\(\frac{14x}{7y}=\frac{2x}{y}\). Divide both sides by 2: \(\frac{x}{y}=\sqrt{w+19}\). Square: \(\left(\frac{x}{y}\right)^2=w+19\), so \(w=\left(\frac{x}{y}\right)^2-19\).` },
+ { d:'geo', t:'spr', acc:['100'], q:String.raw`Point \(O\) is the center of a circle. The measure of arc \(RS\) on this circle is \(100^\circ\). What is the measure, in degrees, of its associated angle \(ROS\)?`,
+   e:String.raw`A central angle has the same measure as the arc it intercepts: \(100^\circ\).` },
+ { d:'adv', t:'spr', acc:['361/8','45.12','45.13'], q:String.raw`The expression \(6\sqrt[5]{3^5x^{45}}\cdot\sqrt[8]{2^8x}\) is equivalent to \(ax^b\), where \(a\) and \(b\) are positive constants and \(x>1\). What is the value of \(a+b\)?`,
+   e:String.raw`\(\sqrt[5]{3^5x^{45}}=3x^9\), so the first factor is \(18x^9\). \(\sqrt[8]{2^8x}=2x^{1/8}\). Product: \(36x^{9+\frac18}=36x^{73/8}\). So \(a+b=36+\frac{73}{8}=\frac{361}{8}=45.125\). That is 6 characters — too long — so enter 361/8, 45.12 or 45.13.` },
+ { d:'geo', t:'mc', a:1, q:String.raw`A right triangle has sides of length \(2\sqrt2\), \(6\sqrt2\), and \(\sqrt{80}\) units. What is the area of the triangle, in square units?`,
+   o:[String.raw`\(8\sqrt2+\sqrt{80}\)`,'12',String.raw`\(24\sqrt{80}\)`,'24'],
+   e:String.raw`\((2\sqrt2)^2+(6\sqrt2)^2=8+72=80=(\sqrt{80})^2\), so the legs are \(2\sqrt2\) and \(6\sqrt2\). Area \(=\frac12\cdot2\sqrt2\cdot6\sqrt2=\frac12\cdot24=12\).` },
+ { d:'adv', t:'mc', a:3, q:String.raw`The expression \(4x^2+bx-45\), where \(b\) is a constant, can be rewritten as \((hx+k)(x+j)\), where \(h\), \(k\), and \(j\) are integer constants. Which of the following must be an integer?`,
+   o:[String.raw`\(\dfrac{b}{h}\)`,String.raw`\(\dfrac{b}{k}\)`,String.raw`\(\dfrac{45}{h}\)`,String.raw`\(\dfrac{45}{k}\)`],
+   e:String.raw`Expanding gives \(hx^2+(hj+k)x+kj\), so \(h=4\) and \(kj=-45\). Then \(\frac{45}{k}=-j\), an integer. \(\frac{45}{h}=\frac{45}{4}\) is not, and \(b=4j+k\) need not be divisible by \(h\) or \(k\).` },
+ { d:'adv', t:'mc', a:2, q:String.raw`\[\begin{aligned}y&=2x^2-21x+64\\ y&=3x+a\end{aligned}\] In the given system of equations, \(a\) is a constant. The graphs of the equations in the given system intersect at exactly one point, \((x,y)\), in the \(xy\)-plane. What is the value of \(x\)?`,
+   o:['\\(-8\\)','\\(-6\\)','6','8'],
+   e:String.raw`Set equal: \(2x^2-24x+(64-a)=0\). Exactly one intersection means a double root, at \(x=-\frac{b}{2a}=\frac{24}{4}=6\).` },
+ { d:'geo', t:'mc', a:2, q:String.raw`An isosceles right triangle has a hypotenuse of length 58 inches. What is the perimeter, in inches, of this triangle?`,
+   o:[String.raw`\(29\sqrt2\)`,String.raw`\(58\sqrt2\)`,String.raw`\(58+58\sqrt2\)`,String.raw`\(58+116\sqrt2\)`],
+   e:String.raw`In a 45-45-90 triangle each leg is \(\frac{58}{\sqrt2}=29\sqrt2\). Perimeter \(=58+2(29\sqrt2)=58+58\sqrt2\).` },
+ { d:'adv', t:'mc', a:3, q:String.raw`In the \(xy\)-plane, a parabola has vertex \((9,-14)\) and intersects the \(x\)-axis at two points. If the equation of the parabola is written in the form \(y=ax^2+bx+c\), where \(a\), \(b\), and \(c\) are constants, which of the following could be the value of \(a+b+c\)?`,
+   o:['\\(-23\\)','\\(-19\\)','\\(-14\\)','\\(-12\\)'],
+   e:String.raw`The vertex is below the \(x\)-axis and the parabola crosses it twice, so it opens up: \(y=a(x-9)^2-14\) with \(a>0\). \(a+b+c\) is \(y\) at \(x=1\): \(64a-14>-14\). Only \(-12\) works.` },
+ { d:'adv', t:'spr', acc:['5'], q:String.raw`Function \(f\) is defined by \(f(x)=-a^x+b\), where \(a\) and \(b\) are constants. In the \(xy\)-plane, the graph of \(y=f(x)-15\) has a \(y\)-intercept at \(\left(0,-\frac{99}{7}\right)\). The product of \(a\) and \(b\) is \(\frac{65}{7}\). What is the value of \(a\)?`,
+   e:String.raw`At \(x=0\): \(-a^0+b-15=b-16=-\frac{99}{7}\), so \(b=\frac{13}{7}\). Then \(a=\frac{65/7}{13/7}=5\).` }
+];
+
+const MODULE2 = [
+ { d:'psda', t:'mc', fig:'m2q1', a:1, q:String.raw`The line graph shows the estimated number of chipmunks in a state park on April 1 of each year from 1989 to 1999. Based on the line graph, in which year was the estimated number of chipmunks in the state park the greatest?`,
+   o:['1989','1994','1995','1998'], e:String.raw`The highest point of the graph is at 1994 (about 160 chipmunks).` },
+ { d:'psda', t:'mc', a:1, q:String.raw`A fish swam a distance of 5,104 yards. How far did the fish swim, in <u>miles</u>? (1 mile = 1,760 yards)`,
+   o:['0.3','2.9','3,344','6,864'], e:String.raw`\(5{,}104\div1{,}760=2.9\) miles.` },
+ { d:'adv', t:'mc', a:2, q:String.raw`Which expression is equivalent to \(12x^3-5x^3\)?`,
+   o:[String.raw`\(7x^6\)`,String.raw`\(17x^3\)`,String.raw`\(7x^3\)`,String.raw`\(17x^6\)`], e:String.raw`Like terms: \((12-5)x^3=7x^3\). Exponents don’t change when you add or subtract.` },
+ { d:'alg', t:'mc', a:0, q:String.raw`\[\begin{aligned}x+y&=18\\ 5y&=x\end{aligned}\] What is the solution \((x,y)\) to the given system of equations?`,
+   o:['\\((15,3)\\)','\\((16,2)\\)','\\((17,1)\\)','\\((18,0)\\)'], e:String.raw`Substitute \(x=5y\): \(6y=18\), \(y=3\), \(x=15\).` },
+ { d:'alg', t:'mc', a:0, q:String.raw`The point \((8,2)\) in the \(xy\)-plane is a solution to which of the following systems of inequalities?`,
+   o:[String.raw`\(\begin{aligned}x&>0\\ y&>0\end{aligned}\)`,String.raw`\(\begin{aligned}x&>0\\ y&<0\end{aligned}\)`,String.raw`\(\begin{aligned}x&<0\\ y&>0\end{aligned}\)`,String.raw`\(\begin{aligned}x&<0\\ y&<0\end{aligned}\)`],
+   e:String.raw`Both coordinates are positive: \(8>0\) and \(2>0\).` },
+ { d:'alg', t:'spr', acc:['15','-5'], q:String.raw`\[|x-5|=10\] What is one possible solution to the given equation?`,
+   e:String.raw`\(x-5=10\Rightarrow x=15\), or \(x-5=-10\Rightarrow x=-5\). Either answer is accepted.` },
+ { d:'alg', t:'spr', acc:['50'], q:String.raw`\[f(x)=7x+1\] The function gives the total number of people on a company retreat with \(x\) managers. What is the total number of people on a company retreat with 7 managers?`,
+   e:String.raw`\(f(7)=7\cdot7+1=50\).` },
+ { d:'adv', t:'mc', a:1, q:String.raw`\[h(x)=x^2-3\] Which table gives three values of \(x\) and their corresponding values of \(h(x)\) for the given function \(h\)?`,
+   o:[[4,5,6],[-2,1,6],[-1,1,3],[-2,1,3]].map(r => '<table class="mini"><tr><th>\\(x\\)</th><td>1</td><td>2</td><td>3</td></tr><tr><th>\\(h(x)\\)</th>' + r.map(v => '<td>' + (v < 0 ? '−' + (-v) : v) + '</td>').join('') + '</tr></table>'),
+   e:String.raw`\(h(1)=1-3=-2\), \(h(2)=4-3=1\), \(h(3)=9-3=6\).` },
+ { d:'adv', t:'mc', a:3, q:String.raw`The function \(f\) is defined by \(f(x)=270(0.1)^x\). What is the value of \(f(0)\)?`,
+   o:['0','1','27','270'], e:String.raw`\((0.1)^0=1\), so \(f(0)=270\).` },
+ { d:'psda', t:'mc', a:0, q:String.raw`To estimate the proportion of a population that has a certain characteristic, a random sample was selected from the population. Based on the sample, it is estimated that the proportion of the population that has the characteristic is 0.49, with an associated margin of error of 0.04. Based on this estimate and margin of error, which of the following is the most appropriate conclusion about the proportion of the population that has the characteristic?`,
+   o:['It is plausible that the proportion is between 0.45 and 0.53.','It is plausible that the proportion is less than 0.45.','The proportion is exactly 0.49.','It is plausible that the proportion is greater than 0.53.'],
+   e:String.raw`The plausible range is \(0.49\pm0.04\), i.e. from 0.45 to 0.53. An estimate never gives the exact value.` },
+ { d:'alg', t:'mc', a:0, q:String.raw`A moving truck can tow a trailer if the combined weight of the trailer and the boxes it contains is no more than 4,600 pounds. What is the maximum number of boxes this truck can tow in a trailer with a weight of 500 pounds if each box weighs 120 pounds?`,
+   o:['34','35','38','39'], e:String.raw`\(500+120n\le4600\Rightarrow n\le34.17\). The largest whole number is 34.` },
+ { d:'adv', t:'mc', a:1, q:String.raw`\[-4x^2-7x=-36\] What is the positive solution to the given equation?`,
+   o:[String.raw`\(\dfrac74\)`,String.raw`\(\dfrac94\)`,'4','7'], e:String.raw`\(4x^2+7x-36=0\Rightarrow(4x-9)(x+4)=0\), so \(x=\frac94\) or \(x=-4\).` },
+ { d:'psda', t:'spr', acc:['3/10','.3'], q:String.raw`The table summarizes the distribution of color and shape for 100 tiles of equal area.<table class="mini"><tr><th></th><th>Red</th><th>Blue</th><th>Yellow</th><th>Total</th></tr><tr><th>Square</th><td>10</td><td>20</td><td>25</td><td>55</td></tr><tr><th>Pentagon</th><td>20</td><td>10</td><td>15</td><td>45</td></tr><tr><th>Total</th><td>30</td><td>30</td><td>40</td><td>100</td></tr></table>If one of these tiles is selected at random, what is the probability of selecting a red tile? (Express your answer as a decimal or fraction, not as a percent.)`,
+   e:String.raw`30 of the 100 tiles are red: \(\frac{30}{100}=0.3\).` },
+ { d:'alg', t:'spr', acc:['2'], q:String.raw`\[f(x)=2x+3\] For the given function \(f\), the graph of \(y=f(x)\) in the \(xy\)-plane is parallel to line \(j\). What is the slope of line \(j\)?`,
+   e:String.raw`Parallel lines have equal slopes; the slope of \(y=2x+3\) is 2.` },
+ { d:'alg', t:'mc', a:0, q:String.raw`A proposal for a new library was included on an election ballot. A radio show stated that 3 times as many people voted in favor of the proposal as people who voted against it. A social media post reported that 15,000 more people voted in favor of the proposal than voted against it. Based on these data, how many people voted against the proposal?`,
+   o:['7,500','15,000','22,500','45,000'], e:String.raw`Let \(A\) = against. In favor \(=3A\), and \(3A-A=15{,}000\Rightarrow A=7{,}500\).` },
+ { d:'geo', t:'mc', fig:'m2q16', a:2, q:String.raw`In the figure, lines \(m\) and \(n\) are parallel. If \(x=6k+13\) and \(y=8k-29\), what is the value of \(z\)?`,
+   o:['3','21','41','139'],
+   e:String.raw`\(x\) and \(y\) are vertical angles, so \(6k+13=8k-29\Rightarrow k=21\) and \(x=139\). Angle \(z\) and angle \(x\) are on the same side of \(t\) and supplementary (parallel lines), so \(z=180-139=41\).` },
+ { d:'alg', t:'mc', a:1, q:String.raw`\[-3x+21px=84\] In the given equation, \(p\) is a constant. The equation has no solution. What is the value of \(p\)?`,
+   o:['0',String.raw`\(\dfrac17\)`,String.raw`\(\dfrac43\)`,'4'], e:String.raw`\((21p-3)x=84\) has no solution when the coefficient is 0: \(21p=3\Rightarrow p=\frac17\) (then \(0=84\)).` },
+ { d:'adv', t:'mc', a:3, q:String.raw`\[f(x)=(x-10)(x+13)\] The function \(f\) is defined by the given equation. For what value of \(x\) does \(f(x)\) reach its minimum?`,
+   o:['\\(-130\\)','\\(-13\\)',String.raw`\(-\dfrac{23}{2}\)`,String.raw`\(-\dfrac32\)`], e:String.raw`The zeros are 10 and \(-13\); the parabola opens up and its minimum is halfway between them: \(\frac{10+(-13)}{2}=-\frac32\).` },
+ { d:'adv', t:'mc', a:0, q:String.raw`The function \(f(x)=\frac19(x-7)^2+3\) gives a metal ball’s height above the ground \(f(x)\), in inches, \(x\) seconds after it started moving on a track, where \(0\le x\le10\). Which of the following is the best interpretation of the vertex of the graph of \(y=f(x)\) in the \(xy\)-plane?`,
+   o:['The metal ball’s minimum height was 3 inches above the ground.','The metal ball’s minimum height was 7 inches above the ground.','The metal ball’s height was 3 inches above the ground when it started moving.','The metal ball’s height was 7 inches above the ground when it started moving.'],
+   e:String.raw`The vertex is \((7,3)\); since \(\frac19>0\) it is a minimum: the lowest height, 3 inches, happens at 7 seconds. (At start, \(x=0\), the height is \(\frac{49}{9}+3\).)` },
+ { d:'geo', t:'spr', acc:['15/17','.8823','.8824','0.882'], q:String.raw`In triangle \(JKL\), \(\cos(K)=\frac{24}{51}\) and angle \(J\) is a right angle. What is the value of \(\cos(L)\)?`,
+   e:String.raw`\(\cos K=\frac{JK}{KL}=\frac{24}{51}\). The other leg is \(JL=\sqrt{51^2-24^2}=\sqrt{2025}=45\), so \(\cos L=\frac{JL}{KL}=\frac{45}{51}=\frac{15}{17}\approx0.8824\).` },
+ { d:'adv', t:'spr', acc:['51'], q:String.raw`\[-x^2+bx-676=0\] In the given equation, \(b\) is a positive integer. The equation has no real solution. What is the greatest possible value of \(b\)?`,
+   e:String.raw`No real solution means the discriminant is negative: \(b^2-4(-1)(-676)=b^2-2704<0\), so \(b<52\). The greatest integer is 51.` },
+ { d:'alg', t:'mc', fig:'m2q22', a:0, q:String.raw`If a new graph of three linear equations is created using the system of equations shown and the equation \(x+4y=-16\), how many solutions \((x,y)\) will the resulting system of three equations have?`,
+   o:['Zero','Exactly one','Exactly two','Infinitely many'],
+   e:String.raw`The graphed line passes through \((-4,5)\) and \((8,2)\): slope \(-\frac14\), \(y\)-intercept 4, i.e. \(x+4y=16\). The line \(x+4y=-16\) has the same slope but a different intercept — it is parallel, so no point lies on all of them.` },
+ { d:'adv', t:'mc', a:2, q:String.raw`\[f(x)=5{,}470(0.64)^{\frac{x}{12}}\] The function \(f\) gives the value, in dollars, of a certain piece of equipment after \(x\) months of use. If the value of the equipment decreases each <u>year</u> by \(p\%\) of its value the preceding year, what is the value of \(p\)?`,
+   o:['4','5','36','64'], e:String.raw`Every 12 months the exponent grows by 1, so the value is multiplied by 0.64 each year: a decrease of \(1-0.64=0.36=36\%\).` },
+ { d:'psda', t:'mc', fig:'m2q24', a:2, q:String.raw`The dot plot represents the 15 values in data set A. Data set B is created by adding 56 to each of the values in data set A. Which of the following correctly compares the medians and the ranges of data sets A and B?`,
+   o:['The median of data set B is equal to the median of data set A, and the range of data set B is equal to the range of data set A.','The median of data set B is equal to the median of data set A, and the range of data set B is greater than the range of data set A.','The median of data set B is greater than the median of data set A, and the range of data set B is equal to the range of data set A.','The median of data set B is greater than the median of data set A, and the range of data set B is greater than the range of data set A.'],
+   e:String.raw`Adding 56 to every value shifts the whole set: the median grows by 56, but max − min stays the same.` },
+ { d:'geo', t:'mc', a:3, q:String.raw`The equation \(x^2+(y-1)^2=49\) represents circle A. Circle B is obtained by shifting circle A down 2 units in the \(xy\)-plane. Which of the following equations represents circle B?`,
+   o:[String.raw`\((x-2)^2+(y-1)^2=49\)`,String.raw`\(x^2+(y-3)^2=49\)`,String.raw`\((x+2)^2+(y-1)^2=49\)`,String.raw`\(x^2+(y+1)^2=49\)`],
+   e:String.raw`The center moves from \((0,1)\) to \((0,-1)\): \(x^2+(y+1)^2=49\).` },
+ { d:'geo', t:'mc', a:1, q:String.raw`Two identical rectangular prisms each have a height of 90 centimeters (cm). The base of each prism is a square, and the surface area of each prism is \(K\ \text{cm}^2\). If the prisms are glued together along a square base, the resulting prism has a surface area of \(\frac{92}{47}K\ \text{cm}^2\). What is the side length, in cm, of each square base?`,
+   o:['4','8','9','16'],
+   e:String.raw`With side \(s\): \(K=2s^2+4(90s)=2s^2+360s\). The glued prism has height 180: \(2s^2+720s\). So \(47(2s^2+720s)=92(2s^2+360s)\); dividing by \(2s\): \(47s+16{,}920=92s+16{,}560\Rightarrow45s=360\Rightarrow s=8\).` },
+ { d:'psda', t:'spr', acc:['600'], q:String.raw`210 is \(p\%\) greater than 30. What is the value of \(p\)?`,
+   e:String.raw`\(\frac{210-30}{30}\times100=\frac{180}{30}\times100=600\).` }
+];
+const MODS = [MODULE1, MODULE2];
+console.assert(MODULE1.length === NQ && MODULE2.length === NQ, 'each module must have 27 questions');
+
+/* =====================================================================
+   STATE + PERSISTENCE
+   ===================================================================== */
+const $ = id => document.getElementById(id);
+const LETTERS = ['A', 'B', 'C', 'D'];
+function blank() { return { phase: 'intro', minutes: 43, mod: 0, idx: 0, deadline: 0, ans: [arr(null), arr(null)], flag: [arr(false), arr(false)], elim: [arr2(), arr2()], used: [0, 0], auto: [false, false], calc: null, abc: false }; }
+function arr(v) { return Array(NQ).fill(v); }
+function arr2() { return Array.from({ length: NQ }, () => []); }
+let S = blank();
+let viewing = null;                       // finished attempt shown on the results screen
+let timerId = null, timerHidden = false, warned = false;
+// Progress of the current attempt lives in SatStore (per student, same as the verbal mocks).
+function save() {
+  if (S.phase === 'test' || S.phase === 'review' || S.phase === 'break') SatStore.setProgress(TEST_ID, Object.assign({ v: 1, savedAt: Date.now() }, S));
+}
+function validSnapshot(p) {
+  const two = (a, f) => Array.isArray(a) && a.length === 2 && a.every(x => Array.isArray(x) && x.length === NQ && x.every(f));
+  return p && p.v === 1 && ['test', 'review', 'break'].includes(p.phase) && (p.mod === 0 || p.mod === 1) &&
+    Number.isInteger(p.idx) && p.idx >= 0 && p.idx < NQ && (p.minutes === 43 || p.minutes === 35) && typeof p.deadline === 'number' &&
+    two(p.ans, x => x === null || (Number.isInteger(x) && x >= 0 && x < 4) || (typeof x === 'string' && x.length <= 6)) &&
+    two(p.flag, x => typeof x === 'boolean') && two(p.elim, Array.isArray);
+}
+
+/* =====================================================================
+   HELPERS
+   ===================================================================== */
+function esc(s) { return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;'); }
+function math(el) {
+  if (window.renderMathInElement) renderMathInElement(el, { delimiters: [{ left: '\\[', right: '\\]', display: true }, { left: '\\(', right: '\\)', display: false }], throwOnError: false });
+  else setTimeout(() => window.renderMathInElement && math(el), 300);
+}
+function show(name) {
+  ['intro', 'test', 'break', 'results'].forEach(n => { $('screen-' + n).hidden = (n !== name); });
+  if (name !== 'test') { $('calc-panel').hidden = true; $('ref-panel').hidden = true; }
+  window.scrollTo(0, 0);
+}
+function toast(msg) { const t = $('toast'); t.textContent = msg; t.hidden = false; clearTimeout(toast._t); toast._t = setTimeout(() => { t.hidden = true; }, 4000); }
+function fmt(ms) { const m = Math.floor(ms / 60000), s = Math.floor(ms % 60000 / 1000); return String(m).padStart(2, '0') + ':' + String(s).padStart(2, '0'); }
+function answered(v) { return v !== null && v !== undefined && v !== ''; }
+function parseNum(s) {
+  s = String(s || '').trim();
+  if (/^-?(\d+\.?\d*|\.\d+)$/.test(s)) return parseFloat(s);
+  const m = s.match(/^(-?)(\d+\.?\d*|\.\d+)\/(\d+\.?\d*|\.\d+)$/);
+  if (m && parseFloat(m[3]) !== 0) return (m[1] ? -1 : 1) * parseFloat(m[2]) / parseFloat(m[3]);
+  return NaN;
+}
+function isCorrect(q, v) {
+  if (!answered(v)) return false;
+  if (q.t === 'mc') return v === q.a;
+  const n = parseNum(v); if (isNaN(n)) return false;
+  return q.acc.some(a => Math.abs(parseNum(a) - n) < 1e-9);
+}
+function studentName() { const u = SatStore.user(); return u ? u.name : ''; }
+function fmtDate(ts) { try { return new Date(ts).toLocaleString('ru-RU', { day: 'numeric', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit' }); } catch (e) { return new Date(ts).toISOString().slice(0, 16).replace('T', ' '); } }
+
+/* =====================================================================
+   INTRO
+   ===================================================================== */
+function renderHistory(boxId, cardId) {
+  const at = SatStore.getAttempts(TEST_ID).slice().reverse();
+  $(cardId).hidden = !at.length;
+  if (!at.length) return;
+  const best = Math.max.apply(null, at.map(a => a.score));
+  $(boxId).innerHTML = '<table class="hist"><tr><th>Дата</th><th>Балл</th><th>Верно</th><th></th></tr>' +
+    at.map(a => '<tr><td>' + esc(fmtDate(a.finishedAt)) + '</td><td class="sc">' + a.score +
+      (a.score === best && at.length > 1 ? '<span class="best">лучший</span>' : '') + '</td><td>' + (a.m1 + a.m2) + '/' + NQ * 2 +
+      '</td><td class="go"><button class="btn ghost small" data-open="' + esc(a.id) + '">Смотреть</button></td></tr>').join('') + '</table>';
+  $(boxId).querySelectorAll('[data-open]').forEach(b => b.addEventListener('click', () => {
+    const a = SatStore.getAttempts(TEST_ID).find(x => x.id === b.dataset.open);
+    if (a) showResults(a);
+  }));
+}
+function showIntro() {
+  clearInterval(timerId);
+  viewing = null;
+  document.querySelectorAll('input[name=mins]').forEach(r => { r.checked = (+r.value === S.minutes); });
+  updMins();
+  renderHistory('intro-history', 'intro-history-card');
+  show('intro');
+}
+function updMins() { const m = document.querySelector('input[name=mins]:checked').value; document.querySelectorAll('.tmod').forEach(td => td.textContent = m + ' мин'); }
+document.querySelectorAll('input[name=mins]').forEach(r => r.addEventListener('change', updMins));
+$('btn-start').addEventListener('click', () => {
+  const keepCalc = S.calc;
+  S = blank(); S.calc = keepCalc;
+  S.minutes = +document.querySelector('input[name=mins]:checked').value;
+  startModule(0);
+});
+
+/* =====================================================================
+   MODULE FLOW + TIMER
+   ===================================================================== */
+function startModule(m) {
+  S.mod = m; S.idx = 0; S.phase = 'test'; S.deadline = Date.now() + S.minutes * 60000; warned = false;
+  save(); enterTest(); openDirections();
+}
+function enterTest() {
+  $('sec-title').textContent = 'Section 2, Module ' + (S.mod + 1) + ': Math';
+  $('pop-title').textContent = $('rv-title').textContent = 'Section 2, Module ' + (S.mod + 1) + ': Math Questions';
+  $('foot-name').textContent = studentName() || 'Student';
+  show('test');
+  clearInterval(timerId); timerId = setInterval(tick, 250);
+  if (S.phase === 'review') openReview(); else renderQuestion();
+  tick();
+}
+function tick() {
+  if (S.phase !== 'test' && S.phase !== 'review') return;
+  const rem = Math.max(0, S.deadline - Date.now());
+  const low = rem <= 300000;
+  if (low && rem > 0 && !warned) { warned = true; timerHidden = false; toast('5 minutes remaining'); }
+  $('timer').textContent = timerHidden ? '' : fmt(rem);
+  $('timer-toggle').textContent = timerHidden ? 'Show' : 'Hide';
+  $('timer').classList.toggle('low', low);
+  if (rem === 0) submitModule(true);
+}
+$('timer-toggle').addEventListener('click', () => { timerHidden = !timerHidden; tick(); });
+
+function submitModule(auto) {
+  if (S.phase !== 'test' && S.phase !== 'review') return;
+  clearInterval(timerId);
+  const m = S.mod;
+  S.used[m] = Math.round(Math.min(S.minutes * 60000, S.minutes * 60000 - (S.deadline - Date.now())) / 1000);
+  S.auto[m] = !!auto;
+  $('nav-pop').hidden = true; closeDirections();
+  if (m === 0) enterBreak();
+  else finishTest();
+}
+function enterBreak() {
+  S.phase = 'break'; S.mod = 0; save();
+  const n = S.ans[0].filter(answered).length;
+  $('break-info').textContent = (S.auto[0] ? 'Время вышло, модуль отправлен автоматически. ' : '') + 'Ответов в Модуле 1: ' + n + ' из ' + NQ + '.';
+  show('break');
+}
+function finishTest() {
+  const m1 = countCorrect(0, S.ans), m2 = countCorrect(1, S.ans);
+  const attempt = { id: String(Date.now()), finishedAt: Date.now(), minutes: S.minutes, ans: S.ans, flag: S.flag, used: S.used, auto: S.auto, m1: m1, m2: m2, score: estScore(m1 + m2) };
+  const keepCalc = S.calc, keepMin = S.minutes;
+  SatStore.addAttempt(TEST_ID, attempt);   // also clears the saved progress
+  S = blank(); S.calc = keepCalc; S.minutes = keepMin;
+  showResults(attempt);
+}
+$('btn-start2').addEventListener('click', () => startModule(1));
+$('rv-abort').addEventListener('click', () => {
+  if (!confirm('Прервать тест? Все ответы этой попытки будут удалены, результат не сохранится.')) return;
+  clearInterval(timerId);
+  const keepMin = S.minutes;
+  SatStore.clearProgress(TEST_ID).then(() => { S = blank(); S.minutes = keepMin; showIntro(); });
+});
+
+/* =====================================================================
+   DIRECTIONS
+   ===================================================================== */
+const SPR_DIR = String.raw`<p class="lp-h" style="margin-top:4px;">Student-produced response directions</p>
+<ul>
+<li>If you find <b>more than one correct answer</b>, enter only one answer.</li>
+<li>You can enter up to 5 characters for a <b>positive</b> answer and up to 6 characters (including the negative sign) for a <b>negative</b> answer.</li>
+<li>If your answer is a <b>fraction</b> that doesn’t fit in the provided space, enter the decimal equivalent.</li>
+<li>If your answer is a <b>decimal</b> that doesn’t fit in the provided space, enter it by truncating or rounding at the fourth digit.</li>
+<li>If your answer is a <b>mixed number</b> (such as \(3\tfrac12\)), enter it as an improper fraction (7/2) or its decimal equivalent (3.5).</li>
+<li>Don’t enter <b>symbols</b> such as a percent sign, comma, or dollar sign.</li>
+</ul>
+<p style="text-align:center; font-weight:700; margin:12px 0 0;">Examples</p>
+<table class="ex"><tr><th>Answer</th><th>Acceptable ways to enter answer</th><th>Unacceptable: will NOT receive credit</th></tr>
+<tr><td>3.5</td><td>3.5<br>3.50<br>7/2</td><td>31/2<br>3 1/2</td></tr>
+<tr><td>\(\frac23\)</td><td>2/3<br>.6666<br>.6667<br>0.666<br>0.667</td><td>0.66<br>.66<br>0.67<br>.67</td></tr>
+<tr><td>\(-\frac13\)</td><td>-1/3<br>-.3333<br>-0.333</td><td>-.33<br>-0.33</td></tr></table>`;
+$('dir-spr').innerHTML = SPR_DIR;
+function openDirections() { $('dir-pop').hidden = false; $('dir-scrim').hidden = false; math($('dir-pop')); }
+function closeDirections() { $('dir-pop').hidden = true; $('dir-scrim').hidden = true; }
+$('btn-dir').addEventListener('click', () => $('dir-pop').hidden ? openDirections() : closeDirections());
+$('dir-close').addEventListener('click', closeDirections);
+$('dir-scrim').addEventListener('click', closeDirections);
+
+/* =====================================================================
+   QUESTION RENDERING
+   ===================================================================== */
+const ICON_MARK = '<svg viewBox="0 0 16 20"><path d="M1.5 1.5h13v17L8 14l-6.5 4.5z" fill="none" stroke="currentColor" stroke-width="1.6"/></svg>';
+function stemHTML(q) { return (q.fig ? FIG[q.fig]() : '') + '<div class="qtext">' + q.q + '</div>'; }
+function renderQuestion() {
+  const m = S.mod, i = S.idx, q = MODS[m][i];
+  $('review-view').hidden = true; $('split').hidden = false;
+  const split = $('split');
+  split.classList.toggle('single', q.t === 'mc');
+  $('pane-left').innerHTML = q.t === 'spr' ? SPR_DIR : '';
+  $('pane-right').innerHTML = '<div class="qinner"><div class="qbar"><span class="qno">' + (i + 1) + '</span>' +
+    '<button class="mark" id="mark">' + ICON_MARK + '<span id="mark-t"></span></button>' +
+    (q.t === 'mc' ? '<button class="abc' + (S.abc ? ' on' : '') + '" id="abc" title="Cross out answer choices">ABC</button>' : '') +
+    '</div>' + stemHTML(q) + '<div id="answer-area"></div></div>';
+  $('mark').addEventListener('click', () => { S.flag[m][i] = !S.flag[m][i]; save(); renderMark(); });
+  if ($('abc')) $('abc').addEventListener('click', () => { S.abc = !S.abc; save(); $('abc').classList.toggle('on', S.abc); renderChoices(); });
+  renderMark();
+  if (q.t === 'mc') renderChoices(); else renderSPR();
+  math($('pane-left')); math($('pane-right'));
+  $('btn-nav').firstChild.textContent = 'Question ' + (i + 1) + ' of ' + NQ + ' ';
+  $('btn-nav').hidden = false;
+  $('btn-back').disabled = (i === 0);
+  $('btn-next').textContent = 'Next';
+  $('pane-left').scrollTop = 0; $('pane-right').scrollTop = 0;
+  S.phase = 'test'; save();
+}
+function renderMark() {
+  const on = S.flag[S.mod][S.idx];
+  $('mark').classList.toggle('on', on);
+  $('mark-t').textContent = 'Mark for Review';
+}
+function renderChoices() {
+  const m = S.mod, i = S.idx, q = MODS[m][i], wrap = $('answer-area');
+  wrap.innerHTML = '';
+  q.o.forEach((txt, k) => {
+    const el = S.elim[m][i].includes(k), row = document.createElement('div');
+    row.className = 'ch' + (S.ans[m][i] === k ? ' sel' : '') + (el ? ' elim' : '');
+    row.innerHTML = '<button class="ch-main"><span class="ch-l">' + LETTERS[k] + '</span><span class="ch-t">' + txt + '</span></button>' +
+      (S.abc ? '<button class="ch-x" title="Cross out">' + (el ? '<span class="undo">Undo</span>' : '<span class="xl">' + LETTERS[k] + '</span>') + '</button>' : '');
+    row.querySelector('.ch-main').addEventListener('click', () => {
+      S.ans[m][i] = (S.ans[m][i] === k) ? null : k;
+      S.elim[m][i] = S.elim[m][i].filter(x => x !== k);
+      save(); renderChoices();
+    });
+    const x = row.querySelector('.ch-x');
+    if (x) x.addEventListener('click', () => {
+      if (el) S.elim[m][i] = S.elim[m][i].filter(z => z !== k);
+      else { S.elim[m][i].push(k); if (S.ans[m][i] === k) S.ans[m][i] = null; }
+      save(); renderChoices();
+    });
+    wrap.appendChild(row);
+  });
+  math(wrap);
+}
+function previewHTML(v) {
+  if (!v) return '';
+  const f = v.match(/^(-?)([\d.]+)\/([\d.]*)$/);
+  return f ? '\\(' + f[1] + '\\frac{' + f[2] + '}{' + (f[3] || '\\;') + '}\\)' : esc(v);
+}
+function renderSPR() {
+  const m = S.mod, i = S.idx, wrap = $('answer-area');
+  wrap.innerHTML = '<div class="spr-box"><input class="spr-input" id="spr" inputmode="decimal" autocomplete="off" spellcheck="false" aria-label="Answer"><div class="spr-prev">Answer Preview: <span id="spr-prev"></span></div></div>';
+  const inp = $('spr'); inp.value = S.ans[m][i] || '';
+  const upd = () => { $('spr-prev').innerHTML = previewHTML(inp.value); math($('spr-prev')); };
+  inp.addEventListener('input', () => {
+    let v = inp.value.replace(/[^0-9./-]/g, '');
+    v = v.replace(/(?!^)-/g, '');                       // minus only at the start
+    v = v.replace(/\/(?=.*\/)/g, '');                    // one slash max
+    v = v.slice(0, v.startsWith('-') ? 6 : 5);
+    inp.value = v; S.ans[m][i] = v || null; save(); upd();
+  });
+  upd();
+}
+
+/* =====================================================================
+   NAVIGATION + REVIEW PAGE
+   ===================================================================== */
+$('btn-back').addEventListener('click', () => {
+  if (S.phase === 'review') { S.idx = NQ - 1; renderQuestion(); return; }
+  if (S.idx > 0) { S.idx--; renderQuestion(); }
+});
+$('btn-next').addEventListener('click', () => {
+  if (S.phase === 'review') {
+    const un = S.ans[S.mod].filter(v => !answered(v)).length;
+    const msg = (un ? 'У тебя ' + un + ' вопрос(ов) без ответа — они будут засчитаны как неверные.\n\n' : '') + 'Отправить Модуль ' + (S.mod + 1) + '? Вернуться к нему будет нельзя.';
+    if (confirm(msg)) submitModule(false);
+    return;
+  }
+  if (S.idx < NQ - 1) { S.idx++; renderQuestion(); } else openReview();
+});
+function buildGrid(el, onClick, withCur) {
+  const m = S.mod; el.innerHTML = '';
+  for (let i = 0; i < NQ; i++) {
+    const b = document.createElement('button');
+    b.className = 'gq' + (answered(S.ans[m][i]) ? ' ans' : '') + (S.flag[m][i] ? ' flag' : '') + (withCur && i === S.idx ? ' cur' : '');
+    b.textContent = i + 1;
+    b.addEventListener('click', () => onClick(i));
+    el.appendChild(b);
+  }
+}
+$('btn-nav').addEventListener('click', () => {
+  const pop = $('nav-pop');
+  if (!pop.hidden) { pop.hidden = true; return; }
+  buildGrid($('pop-grid'), i => { S.idx = i; pop.hidden = true; renderQuestion(); }, true);
+  pop.hidden = false;
+});
+document.addEventListener('click', e => { const p = $('nav-pop'); if (!p.hidden && !p.contains(e.target) && !$('btn-nav').contains(e.target)) p.hidden = true; });
+$('pop-review').addEventListener('click', openReview);
+function openReview() {
+  $('nav-pop').hidden = true;
+  S.phase = 'review'; save();
+  $('split').hidden = true; $('review-view').hidden = false;
+  const m = S.mod, a = S.ans[m].filter(answered).length, f = S.flag[m].filter(Boolean).length;
+  $('rv-counts').textContent = 'Answered: ' + a + ' of ' + NQ + ' · Unanswered: ' + (NQ - a) + ' · For review: ' + f;
+  buildGrid($('rv-grid'), i => { S.idx = i; renderQuestion(); }, false);
+  $('btn-nav').hidden = true;
+  $('btn-back').disabled = false;
+  $('btn-next').textContent = 'Next';
+}
+
+/* =====================================================================
+   DRAGGABLE PANELS
+   ===================================================================== */
+function draggable(panel, handle) {
+  let sx, sy, ox, oy, on = false;
+  handle.addEventListener('pointerdown', e => {
+    if (e.target.closest('button') || window.innerWidth <= 760) return;
+    on = true; sx = e.clientX; sy = e.clientY; const r = panel.getBoundingClientRect(); ox = r.left; oy = r.top;
+    panel.style.right = 'auto'; handle.setPointerCapture(e.pointerId);
+  });
+  handle.addEventListener('pointermove', e => {
+    if (!on) return;
+    const x = Math.min(Math.max(0, ox + e.clientX - sx), window.innerWidth - 80), y = Math.min(Math.max(0, oy + e.clientY - sy), window.innerHeight - 40);
+    panel.style.left = x + 'px'; panel.style.top = y + 'px';
+  });
+  handle.addEventListener('pointerup', () => { on = false; });
+}
+draggable($('calc-panel'), $('calc-drag'));
+draggable($('ref-panel'), $('ref-drag'));
+
+/* =====================================================================
+   DESMOS CALCULATOR (Graphing + Scientific, like Bluebook)
+   ===================================================================== */
+let calcG = null, calcS = null, desmosLoading = false;
+function loadDesmos(cb) {
+  if (window.Desmos) return cb();
+  if (desmosLoading) return;
+  desmosLoading = true;
+  const sc = document.createElement('script'); sc.src = DESMOS_SRC;
+  sc.onload = () => { desmosLoading = false; cb(); };
+  sc.onerror = () => { desmosLoading = false; $('calc-msg').hidden = false; $('calc-msg').textContent = 'Не удалось загрузить калькулятор Desmos. Проверь подключение к интернету (или API-ключ Desmos в коде страницы).'; };
+  document.head.appendChild(sc);
+}
+function initCalc() {
+  if (!calcG) {
+    calcG = Desmos.GraphingCalculator($('calc-g'), { keypad: true, expressions: true, settingsMenu: true, zoomButtons: true, expressionsTopbar: true, pointsOfInterest: true, trace: true, images: false, folders: false, notes: false, links: false, border: false });
+    if (S.calc) { try { calcG.setState(S.calc); } catch (e) {} }
+    let t; calcG.observeEvent('change', () => { clearTimeout(t); t = setTimeout(() => { S.calc = calcG.getState(); save(); }, 600); });
+    new ResizeObserver(() => { calcG && calcG.resize(); calcS && calcS.resize && calcS.resize(); }).observe($('calc-body'));
+  }
+}
+function calcTab(which) {
+  $('calc-tab-g').classList.toggle('on', which === 'g'); $('calc-tab-s').classList.toggle('on', which === 's');
+  $('calc-g').hidden = which !== 'g'; $('calc-s').hidden = which !== 's';
+  if (which === 's' && !calcS && window.Desmos) calcS = Desmos.ScientificCalculator($('calc-s'));
+  setTimeout(() => { calcG && calcG.resize(); calcS && calcS.resize && calcS.resize(); }, 30);
+}
+$('btn-calc').addEventListener('click', () => {
+  const p = $('calc-panel'); p.hidden = !p.hidden; $('btn-calc').classList.toggle('on', !p.hidden);
+  if (!p.hidden) loadDesmos(() => { initCalc(); calcG.resize(); });
+});
+$('calc-close').addEventListener('click', () => { $('calc-panel').hidden = true; $('btn-calc').classList.remove('on'); });
+$('calc-tab-g').addEventListener('click', () => calcTab('g'));
+$('calc-tab-s').addEventListener('click', () => loadDesmos(() => calcTab('s')));
+$('calc-expand').addEventListener('click', () => {
+  const p = $('calc-panel'); p.style.width = ''; p.style.height = ''; p.classList.toggle('expanded');
+  $('calc-expand').classList.toggle('on', p.classList.contains('expanded'));
+  setTimeout(() => calcG && calcG.resize(), 30);
+});
+
+/* =====================================================================
+   REFERENCE SHEET
+   ===================================================================== */
+const REF = [
+  ['<circle class="s" cx="45" cy="35" r="28"/><circle cx="45" cy="35" r="2"/><line class="s" x1="45" y1="35" x2="73" y2="35"/><text x="56" y="31">r</text>', String.raw`\(A=\pi r^2\)<br>\(C=2\pi r\)`],
+  ['<rect class="s" x="15" y="18" width="70" height="34"/><text x="48" y="13">ℓ</text><text x="90" y="39">w</text>', String.raw`\(A=\ell w\)`],
+  ['<path class="s" d="M10 60 L90 60 L55 10 Z"/><line class="s dsh" x1="55" y1="10" x2="55" y2="60"/><path class="s" d="M55 53 h7 v7"/><text x="58" y="38">h</text><text x="48" y="71">b</text>', String.raw`\(A=\frac12 bh\)`],
+  ['<path class="s" d="M20 60 L90 60 L20 10 Z"/><path class="s" d="M20 53 h7 v7"/><text x="10" y="38">b</text><text x="52" y="71">a</text><text x="58" y="31">c</text>', String.raw`\(c^2=a^2+b^2\)`],
+  ['<path class="s" d="M8 60 L95 60 L95 12 Z"/><path class="s" d="M88 60 v-7 h7"/><text x="40" y="30">2x</text><text x="98" y="40">x</text><text x="44" y="71">x√3</text><text x="22" y="57" style="font-style:normal">30°</text><text x="78" y="26" style="font-style:normal">60°</text>', 'Special right triangles'],
+  ['<path class="s" d="M25 60 L80 60 L25 8 Z"/><path class="s" d="M25 53 h7 v7"/><text x="14" y="36">s</text><text x="50" y="71">s</text><text x="56" y="30">s√2</text><text x="30" y="22" style="font-style:normal">45°</text><text x="58" y="56" style="font-style:normal">45°</text>', 'Special right triangles'],
+  ['<path class="s" d="M15 30 h55 v32 h-55 z M15 30 l15 -14 h55 l-15 14 M85 16 v32 l-15 14"/><text x="40" y="72">ℓ</text><text x="80" y="62">w</text><text x="88" y="34">h</text>', String.raw`\(V=\ell wh\)`],
+  ['<ellipse class="s" cx="50" cy="16" rx="30" ry="9"/><path class="s" d="M20 16 v40 a30 9 0 0 0 60 0 v-40"/><line class="s" x1="50" y1="16" x2="80" y2="16"/><text x="62" y="12">r</text><text x="85" y="40">h</text>', String.raw`\(V=\pi r^2h\)`],
+  ['<circle class="s" cx="50" cy="35" r="28"/><ellipse class="s dsh" cx="50" cy="35" rx="28" ry="8"/><line class="s" x1="50" y1="35" x2="78" y2="35"/><text x="62" y="31">r</text>', String.raw`\(V=\frac43\pi r^3\)`],
+  ['<path class="s" d="M20 58 L50 8 L80 58"/><ellipse class="s" cx="50" cy="58" rx="30" ry="8"/><line class="s dsh" x1="50" y1="8" x2="50" y2="58"/><line class="s" x1="50" y1="58" x2="80" y2="58"/><text x="53" y="38">h</text><text x="63" y="55">r</text>', String.raw`\(V=\frac13\pi r^2h\)`],
+  ['<path class="s" d="M15 58 L45 8 L85 58 Z M45 8 L65 44 L85 58 M15 58 L35 44"/><line class="s dsh" x1="35" y1="44" x2="65" y2="44"/><line class="s dsh" x1="45" y1="8" x2="48" y2="50"/><text x="38" y="70">ℓ</text><text x="78" y="48">w</text><text x="49" y="32">h</text>', String.raw`\(V=\frac13\ell wh\)`]
+];
+$('ref-body').innerHTML = '<div class="ref-grid">' + REF.map(r => '<div><svg viewBox="0 0 110 75">' + r[0] + '</svg><div class="ref-f">' + r[1] + '</div></div>').join('') + '</div>' +
+  '<div class="ref-facts">The number of degrees of arc in a circle is 360.<br>The number of radians of arc in a circle is \\(2\\pi\\).<br>The sum of the measures in degrees of the angles of a triangle is 180.</div>';
+$('btn-ref').addEventListener('click', () => { const p = $('ref-panel'); p.hidden = !p.hidden; $('btn-ref').classList.toggle('on', !p.hidden); if (!p.hidden) math($('ref-body')); });
+$('ref-close').addEventListener('click', () => { $('ref-panel').hidden = true; $('btn-ref').classList.remove('on'); });
+
+/* =====================================================================
+   SCORING + RESULTS
+   ===================================================================== */
+function countCorrect(m, ans) { return MODS[m].reduce((c, q, i) => c + (isCorrect(q, ans[m][i]) ? 1 : 0), 0); }
+function estScore(raw) { const s = Math.round((200 + 600 * Math.pow(raw / (NQ * 2), 0.8)) / 10) * 10; return Math.max(200, Math.min(800, s)); }
+function showResults(a) {
+  viewing = a;
+  const m1 = a.m1, m2 = a.m2, raw = m1 + m2, sc = a.score;
+  $('res-score').textContent = sc;
+  $('res-range').textContent = 'Ориентировочный диапазон: ' + Math.max(200, sc - 30) + '–' + Math.min(800, sc + 30) + ' (Math, шкала 200–800)';
+  const autoNote = a.auto && (a.auto[0] || a.auto[1]) ? ' · время вышло в ' + (a.auto[0] && a.auto[1] ? 'обоих модулях' : 'Модуле ' + (a.auto[0] ? 1 : 2)) : '';
+  $('res-date').textContent = 'Попытка от ' + fmtDate(a.finishedAt) + ' · ' + a.minutes + ' мин на модуль' + autoNote;
+  $('res-m1').textContent = m1 + '/' + NQ; $('res-m2').textContent = m2 + '/' + NQ; $('res-total').textContent = raw + '/' + (NQ * 2);
+  const st = {}; ORDER.forEach(d => st[d] = { c: 0, n: 0 });
+  [0, 1].forEach(m => MODS[m].forEach((q, i) => { st[q.d].n++; if (isCorrect(q, a.ans[m][i])) st[q.d].c++; }));
+  $('res-domains').innerHTML = ORDER.map(d => '<div class="drow"><div class="dl"><span>' + DOM[d] + '</span><b>' + st[d].c + ' / ' + st[d].n + '</b></div><div class="bar"><i style="width:' + Math.round(st[d].c / st[d].n * 100) + '%"></i></div></div>').join('');
+  renderHistory('res-history', 'res-history-card');
+  const anyWrong = raw < NQ * 2;
+  [...$('filters').children].forEach(b => b.classList.toggle('on', b.dataset.f === (anyWrong ? 'wrong' : 'all')));
+  renderReviewList(anyWrong ? 'wrong' : 'all');
+  show('results');
+}
+function renderReviewList(filter) {
+  const A = viewing; if (!A) return;
+  const list = $('review-list'); list.innerHTML = '';
+  [0, 1].forEach(m => MODS[m].forEach((q, i) => {
+    const a = A.ans[m][i], fl = A.flag[m][i], ok = isCorrect(q, a), skip = !answered(a);
+    if (filter === 'wrong' && ok) return;
+    if (filter === 'flag' && !fl) return;
+    const d = document.createElement('details'); d.className = 'rv';
+    let body;
+    if (q.t === 'mc') {
+      body = q.o.map((t, k) => '<div class="ro' + (k === q.a ? ' correct' : (k === a ? ' wrong' : '')) + '"><b>' + LETTERS[k] + '</b><span>' + t + (k === a ? ' <em class="muted">(твой ответ)</em>' : '') + '</span></div>').join('');
+    } else {
+      body = '<div class="ro ' + (ok ? 'correct' : 'wrong') + '"><b>Твой ответ:</b><span>' + (skip ? '<em class="muted">нет ответа</em>' : esc(a)) + '</span></div>' +
+        '<div class="ro correct"><b>Верно:</b><span>' + q.acc.map(esc).join(' &nbsp;или&nbsp; ') + '</span></div>';
+    }
+    d.innerHTML = '<summary><span class="mk ' + (ok ? 'ok' : skip ? 'skip' : 'no') + '">' + (ok ? '✓' : skip ? '–' : '✕') + '</span>' +
+      '<span>Module ' + (m + 1) + ' · Question ' + (i + 1) + ' · ' + (q.t === 'mc' ? 'Multiple choice' : 'Student-produced response') + (fl ? ' · ⚑' : '') + '</span></summary>' +
+      '<div class="rvbody"><div class="tagline">' + DOM[q.d] + '</div>' + stemHTML(q) + body + '<div class="expl"><b>Разбор.</b> ' + q.e + '</div></div>';
+    d.addEventListener('toggle', () => { if (d.open && !d._m) { d._m = 1; math(d); } });
+    list.appendChild(d);
+  }));
+  if (!list.children.length) list.innerHTML = '<p class="muted">Здесь ничего нет' + (filter === 'wrong' ? ' — все ответы верные!' : '.') + '</p>';
+}
+$('filters').addEventListener('click', e => {
+  const b = e.target.closest('button'); if (!b) return;
+  [...$('filters').children].forEach(x => x.classList.toggle('on', x === b));
+  renderReviewList(b.dataset.f);
+});
+$('btn-retake').addEventListener('click', showIntro);
+$('btn-history').addEventListener('click', showIntro);
+
+/* =====================================================================
+   LOGIN (sat-store.js) + RESTORE AFTER RELOAD
+   ===================================================================== */
+SatStore.onBeforeLogout = () => {
+  if (S.phase === 'test' || S.phase === 'review') return confirm('Идёт тест. Прогресс сохранён — войти под другим именем?');
+  return true;
+};
+SatStore.requireLogin().then(() => {
+  const p = SatStore.getProgress(TEST_ID);
+  if (p && validSnapshot(p)) {
+    S = Object.assign(blank(), p);
+    if (S.phase === 'break') { enterBreak(); toast('Прогресс восстановлен'); return; }
+    if (Date.now() >= S.deadline) {
+      // the module's time ran out while the page was closed — submit it like an auto-submit
+      S.phase = 'test';
+      toast('Пока тебя не было, время модуля вышло — он отправлен автоматически');
+      submitModule(true);
+      return;
+    }
+    enterTest();
+    toast('Прогресс восстановлен: Модуль ' + (S.mod + 1) + ', вопрос ' + (S.idx + 1));
+    return;
+  }
+  if (p) SatStore.clearProgress(TEST_ID);
+  showIntro();
+});
+</script>
+</body>
+</html>
